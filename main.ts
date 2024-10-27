@@ -1,8 +1,6 @@
 import { AuthSystem } from "./src/authSystem";
 import { SystemInterface } from "./src/systemInterface";
-import { UserManager } from "./src/UserManager";
 
-const userManager = new UserManager();
 const authSystem = new AuthSystem(userManager);
 const systemInterface = new SystemInterface(authSystem);
 
