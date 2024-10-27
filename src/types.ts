@@ -1,14 +1,43 @@
 export enum Role {
-    CustomerService = "CustomerService",
-    SeniorCustomerService = "SeniorCustomerService",
-    FinancialManager = "FinancialManager",
-    AdminManager = "AdminManager",
+    CustomerService = "CS",
+    SeniorCustomerService = "SCS",
+    FinancialManager = "FM",
+    AdminManager = "AM",
     HR = "HR",
-    Marketing = "Marketing",
-    VicePresident = "VicePresident"
-  }
-  
-  export interface Permission {
+    ProductionManager = "PM",
+    ServiceManager = "SM",
+    VP = "VP"
+}
+
+export interface Permission {
     [key: string]: string[];
-  }
-  
+}
+
+// Entity Definitions
+export interface Client {
+    id: string;
+    name: string;
+    events: Event[];
+}
+
+export interface Event {
+    id: string;
+    details: string;
+    status: string; // "open", "in_progress", "closed"
+    budget: number;
+}
+
+export interface StaffMember {
+    id: string;
+    name: string;
+    role: Role;
+    schedule: string[]; // List of event IDs
+}
+
+export interface Request {
+    id: string;
+    clientId: string;
+    details: string;
+    assignedTo: Role;
+    status: string; // "pending", "approved", "rejected"
+}
