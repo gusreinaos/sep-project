@@ -2,7 +2,7 @@ import { Role, Permission } from "./types";
 
 export const permissions: Permission = {
     [Role.CustomerService]: ["registerClient", "createRequest"],
-    [Role.SeniorCustomerService]: ["approveRequest", "rejectRequest", "viewAllRequests"],
+    [Role.SeniorCustomerService]: ["approveRequest", "rejectRequest", "viewAllRequests", "redirectRequest"],
     [Role.FinancialManager]: ["applyDiscount", "viewClientFinances", "negotiateBudget"],
     [Role.AdminManager]: ["approveBudget", "manageSchedule"],
     [Role.HR]: ["viewEmployeeHistory", "updateEmployeeRecords", "requestAdditionalStaff"],

@@ -20,6 +20,6 @@ export class Request {
 
 export enum Status {
     Created = "Created",
+    InProgress = "InProgress",
     Closed = "Closed",
-    Going = "Goind"
 }

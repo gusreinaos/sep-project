@@ -30,5 +30,10 @@ export class SystemInterface {
         // Placeholder for actual action handling
         return `Action '${action}' executed successfully.`;
     }
+
+    showListOptions(list: any, objectType: string) {
+        console.log(`List of ${objectType}`);
+        Object.keys(list).forEach(option => console.log(`- ${option}`));
+    }
 }
 

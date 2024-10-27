@@ -1,15 +1,22 @@
 import { User } from "./user";
 import { Role } from "./types";
+import { UserManager } from "./UserManager";
 
 export class AuthSystem {
-    private users: User[] = [
-        new User("john", Role.CustomerService),
-        new User("jane", Role.SeniorCustomerService),
-        new User("alice", Role.FinancialManager),
-        new User("tobias", Role.ProductionManager),
-        new User("jack", Role.ServiceManager),
-        new User("vp", Role.VP)
-    ];
+    constructor(userManager: UserManager) {
+        this.userManager = userManager;
+        this.users = [
+            new User("john", Role.CustomerService, this.userManager),
+            new User("jane", Role.SeniorCustomerService, this.userManager),
+            new User("alice", Role.FinancialManager, this.userManager),
+            new User("tobias", Role.ProductionManager, this.userManager),
+            new User("jack", Role.ServiceManager, this.userManager),
+            new User("vp", Role.VP, this.userManager),
+        ];
+    }
+
+    public userManager: UserManager;
+    public users: User[];
     private currentUser: User | null = null;
 
     login(username: string): string {
