@@ -1,13 +1,11 @@
 import * as readline from "readline";
 import { GetAllRequests } from "../../application/getAllRequests";
-import { RedirectRequest } from "../../application/redirectRequest";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
-import { Status } from "../../domain/request";
+import { Request, Status } from "../../domain/request";
 
 export class SeniorCustomerServiceMenu {
     constructor(
         private readonly getAllRequests: GetAllRequests,
-        private readonly redirectRequest: RedirectRequest,
         private readonly updateRequestByStatus: UpdateRequestByStatus) {}
 
     displayMenu(): void {
@@ -51,8 +49,9 @@ export class SeniorCustomerServiceMenu {
             return;
         }
 
-        requests.forEach((request) => {
-            console.log(`ID: ${request.requestId}, Event Name: ${request.eventName}, Status: ${request.status}`);
+        requests.forEach((request: Request) => {
+            const print = JSON.stringify(request, null, 2); //pretty print
+            console.log(`Request: ${print}`);
         });
 
         this.getRequestAction();
