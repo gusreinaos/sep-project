@@ -1,3 +1,5 @@
+import { Event } from "./types";
+
 export class Request {
     public requestId: string;
     public clientId: string;
@@ -9,6 +11,8 @@ export class Request {
     public details: string;
     public status: Status;
     public financialFeedback: string;
+    public eventDetails: Event;
+    public budgetApproved: boolean;
 
     constructor(
         requestId: string,
@@ -31,6 +35,13 @@ export class Request {
         this.details = details;
         this.status = status;
         this.financialFeedback = "";
+        this.eventDetails = {
+            id: requestId,
+            details: "",
+            status: status, // "open", "in_progress", "closed"
+            budget: 0,
+        }
+        this.budgetApproved = false;
     }
 }
 
