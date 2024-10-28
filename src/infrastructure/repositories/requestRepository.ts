@@ -1,5 +1,3 @@
-import { User } from "../../domain/user";
-import { Role } from "../../domain/types";
 import { Request } from "../../domain/request";
 
 export class RequestRepository {

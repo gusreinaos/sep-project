@@ -1,5 +1,5 @@
-import { CreateEventRequest } from "../../application/createEventRequest";
 import * as readline from "readline";
+import { CreateEventRequest } from "../../application/createEventRequest";
 import { Status } from "../../domain/request";
 import { Role } from "../../domain/types";
 

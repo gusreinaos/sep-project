@@ -6,7 +6,9 @@
   ],
   "settings": {
     "editor.codeActionsOnSave": {
-      "source.fixAll": "explicit"
+      "source.fixAll": "explicit",
+      "source.organizeImports": true,
+      "source.sortMembers": true
     },
     "eslint.validate": [
       "javascript",

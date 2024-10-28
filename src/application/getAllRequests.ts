@@ -1,7 +1,5 @@
-import { Status } from "../domain/request";
-import { Role } from "../domain/types";
-import { RequestRepository } from "../infrastructure/repositories/requestRepository";
 import { Request } from "../domain/request";
+import { RequestRepository } from "../infrastructure/repositories/requestRepository";
 
 export class GetAllRequests {
 
@@ -13,4 +11,4 @@ export class GetAllRequests {
         return requests
 
     }
-}
+} 
