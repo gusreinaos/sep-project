@@ -1,13 +1,22 @@
 import * as readline from "readline";
+import { GetAssignedRequests } from "../../application/getAssignedRequests";
+import { RedirectRequest } from "../../application/redirectRequest";
 import { GetAvailableStaff } from "../../application/staff/getAvailabelStaff";
+import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
+import { Request, Status } from "../../domain/request";
 import { Staff } from "../../domain/staff";
+import { Role } from "../../domain/types";
 import { User } from "../../domain/user";
+import { UserRepository } from "../repositories/userRepository";
 
 export class ServiceManagerMenu {
     getAllRequests: any;
-    updateRequestByStatus: any;
     constructor(
-        private readonly getAvailableStaff: GetAvailableStaff 
+        private readonly getAvailableStaff: GetAvailableStaff,
+        private readonly getAssignedRequests: GetAssignedRequests,
+        private readonly redirectRequest: RedirectRequest,
+        private readonly userRepositoy: UserRepository,
+        private readonly updateRequestByStatus: UpdateRequestByStatus
     ) {}
 
     private curr_user: any;
@@ -15,8 +24,10 @@ export class ServiceManagerMenu {
     displayMenu(curr_user: User): void {
         console.log("\n--- Service Manager Menu ---");
         console.log("1. Show available staff");
-        console.log("2. ");
-        console.log("3. Exit");
+        console.log("2. Check sub-team comments");
+        console.log("3. Request Budget check from Financial Manager");
+        console.log("4. Update application status to in-progress");
+        console.log("5. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
     }
@@ -33,10 +44,16 @@ export class ServiceManagerMenu {
                     this.showAvailableStaff();
                     break;
                 case "2":
-                    //
+                    this.reviewSubTeamComments();
                     break;
                 case "3":
-                    console.log("Exiting the Service Manager Menu.");
+                    this.requestBudgetCheck();
+                    break;
+                case "4":
+                    this.updateApplicationStatus();
+                    break;
+                case "5":
+                    console.log("Exiting the Production Manager Menu.");
                     rl.close();
                     return;
                 default:
@@ -61,4 +78,54 @@ export class ServiceManagerMenu {
         this.displayMenu(this.curr_user);
     }
 
+    private reviewSubTeamComments(): void {
+        console.log("Reviewing sub-team comments.");
+        const requests = this.getAssignedRequests.execute(this.curr_user.userId);
+        if(requests.length === 0) {
+            console.log("No assigned requests.");
+        } else {
+            console.log("Assigned Requests:");
+            requests.forEach(request => {
+                console.log("Event Details");
+                console.log(`Budget: ${request.eventDetails.budget}, Comments: ${request.eventDetails.details}`);
+            });
+        }
+        this.displayMenu(this.curr_user);
+    }
+
+    private requestBudgetCheck(): void {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+
+        rl.question("Enter request Id to send to financial manager", (requestId) => {
+            const message = this.redirectRequest.execute(
+                this.userRepositoy.getUsersByRole(Role.FinancialManager)[0].userId, requestId);
+                
+                console.log(message);
+                rl.close();
+                this.displayMenu(this.curr_user);
+        });    
+    }
+
+    private updateApplicationStatus(): void {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+
+        rl.question("Enter request Id to update status to in-progress", (requestId) => {
+            const curr_request: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
+            if(curr_request.budgetApproved){
+                const message = this.updateRequestByStatus.execute(requestId, Status.InProgress);
+                
+                console.log(message);
+            } else {
+                console.log("Budget not approved yet.");
+            }
+            rl.close();
+            this.displayMenu(this.curr_user);
+        });
+    }
 }
