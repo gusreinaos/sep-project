@@ -1,7 +1,6 @@
-import { Role } from "./types";
 import { permissions } from "./permissions";
-import { Request, Status } from "./request";
-import { UserRepository } from "../infrastructure/repositories/userRepository";
+import { Request } from "./request";
+import { Role } from "./types";
 
 export class User {
     private requests: Request[] = [];
@@ -18,7 +17,7 @@ export class User {
         this.role = role;
     }
 
-    getPermissions(): string[] {
+    getPermissions(): string[] { 
         return permissions[this.role] || [];
     }
 
