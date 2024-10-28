@@ -9,6 +9,13 @@ export enum Role {
     VP = "VP"
 }
 
+export enum StaffRole {
+    Cook = "Cook",
+    Waiter = "Waiter",
+    Cleaner = "Cleaner",
+    //TODO add more roles based on use case
+}
+
 export interface Permission {
     [key: string]: string[];
 }
