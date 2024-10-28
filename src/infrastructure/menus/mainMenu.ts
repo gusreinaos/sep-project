@@ -1,5 +1,6 @@
 import * as readline from "readline";
 import { AuthSystem } from "../../authSystem";
+import { AdministrationManagerMenu } from "./administrationManagerMenu";
 import { CustomerServiceMenu } from "./customerServiceMenu";
 import { FinancialManagerMenu } from "./financialManagerMenu";
 import { SeniorCustomerServiceMenu } from "./seniorCustomerServiceMenu";
@@ -11,6 +12,7 @@ export class MainMenu {
         private readonly customerServiceMenu: CustomerServiceMenu,
         private readonly seniorCustomerServiceMenu: SeniorCustomerServiceMenu,
         private readonly financialManagerMenu: FinancialManagerMenu,
+        private readonly administrationManagerMenu: AdministrationManagerMenu,
     ) {}
 
     displayMenu(): void {
@@ -54,7 +56,9 @@ export class MainMenu {
                 const result = this.authSystem.login(username);
                 console.log(result);
                 rl.close();
-                switch(this.authSystem.getCurrentUser()?.role) {
+
+                const curr_user = this.authSystem.getCurrentUser();
+                switch(curr_user?.role) {
                         case "CS":
                             this.customerServiceMenu.displayMenu();
                             return;
@@ -62,11 +66,11 @@ export class MainMenu {
                             this.seniorCustomerServiceMenu.displayMenu();
                             return;
                         case "FM":
-                            this.financialManagerMenu.displayMenu();
+                            this.financialManagerMenu.displayMenu(curr_user);
                             return;
                         case "AM":
-                            // this.adminManagerMenu.displayMenu();
-                            // return;
+                            this.administrationManagerMenu.displayMenu(curr_user);
+                            return;
                         case "HR":
                             // this._.displayMenu();
                             // return;
