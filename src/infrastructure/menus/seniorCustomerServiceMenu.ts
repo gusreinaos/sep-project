@@ -6,7 +6,7 @@ import { Role } from "../../domain/types";
 import { Request } from "../../domain/request";
 import { GetAllRequests } from "../../application/getAllRequests";
 import { UpdateRequest } from "../../application/updateRequest";
-import { UpdateRequestByStatus } from "../../application/updateRequestById";
+import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { RedirectRequest } from "../../application/redirectRequest";
 
 export class SeniorCustomerServiceMenu {
