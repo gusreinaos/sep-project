@@ -43,4 +43,9 @@ export class StaffRepository {
     getStaffById(staffId: string): Staff | undefined {
         return this.staff.find(staffMember => staffMember.staffId === staffId);
     }
+
+    // Get available staff
+    getAvailableStaff(): Staff[] {
+        return this.staff.filter(staffMember => staffMember.available);
+    }
 }

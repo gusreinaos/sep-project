@@ -1,18 +1,20 @@
 import * as readline from "readline";
+import { GetAvailableStaff } from "../../application/staff/getAvailabelStaff";
+import { Staff } from "../../domain/staff";
 import { User } from "../../domain/user";
 
 export class ProductionManagerMenu {
     getAllRequests: any;
     updateRequestByStatus: any;
     constructor(
-        
+        private readonly getAvailableStaff: GetAvailableStaff 
     ) {}
 
     private curr_user: any;
 
     displayMenu(curr_user: User): void {
         console.log("\n--- Production Manager Menu ---");
-        console.log("1. ");
+        console.log("1. Show Available Staff");
         console.log("2. ");
         console.log("3. Exit");
         this.curr_user = curr_user;
@@ -28,7 +30,7 @@ export class ProductionManagerMenu {
         rl.question("Select an option: ", (selection) => {
             switch (selection.trim()) {
                 case "1":
-                    //
+                    this.showAvailableStaff();
                     break;
                 case "2":
                     //
@@ -46,4 +48,16 @@ export class ProductionManagerMenu {
         });
     }
 
+    private showAvailableStaff(): void {
+        const availableStaff = this.getAvailableStaff.execute();
+        if(availableStaff.length === 0) {
+            console.log("No available staff.");
+        } else {
+            console.log("Available Staff:");
+            availableStaff.forEach((staff: Staff) => {
+                console.log(`Id: ${staff.staffId}, Available: ${staff.available}, Role: ${staff.staffRole}`);
+            });
+        }
+        this.displayMenu(this.curr_user);
+    }
 }
