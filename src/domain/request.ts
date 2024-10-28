@@ -8,6 +8,7 @@ export class Request {
     public date: Date;
     public details: string;
     public status: Status;
+    public financialFeedback: string;
 
     constructor(
         requestId: string,
@@ -29,6 +30,7 @@ export class Request {
         this.date = date;
         this.details = details;
         this.status = status;
+        this.financialFeedback = "";
     }
 }
 

@@ -40,4 +40,8 @@ export class RequestRepository {
     getRequestById(requestId: string): Request | undefined {
         return this.requests.find(request => request.requestId === requestId);
     }
+
+    getRequestByUserID(userId: string): Request[] {
+        return this.requests.filter(request => request.staffId === userId);
+    }
 }
