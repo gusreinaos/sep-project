@@ -1,4 +1,5 @@
 import * as readline from "readline";
+import { GetAssignedRequests } from "../../application/getAssignedRequests";
 import { RedirectRequest } from "../../application/redirectRequest";
 import { UpdateRequest } from "../../application/updateRequest";
 import { Request } from "../../domain/request";
@@ -7,11 +8,11 @@ import { User } from "../../domain/user";
 import { UserRepository } from "../repositories/userRepository";
 
 export class SubTeamMenu {
-    getAssignedRequests: any;
     constructor(
         private readonly updateRequest: UpdateRequest,
         private readonly redirectRequest: RedirectRequest,
-        private readonly userRepositoy: UserRepository
+        private readonly userRepositoy: UserRepository,
+        private readonly getAssignedRequests: GetAssignedRequests
     ) {}
 
     private curr_user: any;
@@ -64,8 +65,7 @@ export class SubTeamMenu {
         } else {
             console.log("Assigned Requests:");
             requests.forEach((request: Request) => {
-                const print = JSON.stringify(request.eventDetails, null, 2); //pretty print
-                console.log(`Event Details: ${print}`);
+                console.log(`Event Details: ${request.eventDetails.details}, Budget: ${request.eventDetails.budget}`);
             });
         }
         this.displayMenu(this.curr_user);
