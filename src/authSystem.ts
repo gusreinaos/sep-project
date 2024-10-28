@@ -1,6 +1,6 @@
-import { User } from "./user";
-import { Role } from "./types";
-import { UserManager } from "./UserManager";
+import { User } from "./domain/user";
+import { Role } from "./domain/types";
+import { UserManager } from "./infrastructure/repositories/userRepository";
 
 export class AuthSystem {
     constructor(userManager: UserManager) {
