@@ -1,13 +1,8 @@
-import { CreateEventRequest } from "../../application/createEventRequest";
-import { RequestRepository } from "../../infrastructure/repositories/requestRepository";
 import * as readline from "readline";
-import { Status } from "../../domain/request";
-import { Role } from "../../domain/types";
-import { Request } from "../../domain/request";
 import { GetAllRequests } from "../../application/getAllRequests";
-import { UpdateRequest } from "../../application/updateRequest";
-import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { RedirectRequest } from "../../application/redirectRequest";
+import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
+import { Status } from "../../domain/request";
 
 export class SeniorCustomerServiceMenu {
     constructor(
@@ -35,7 +30,7 @@ export class SeniorCustomerServiceMenu {
                     this.reviewRequests()
                     break;
                 case "2":
-                    this.redirectRequestCommand()
+                    // this.redirectRequestCommand()
                 case "3":
                     console.log("Invalid option. Please select again.");
                     this.displayMenu();
@@ -63,10 +58,10 @@ export class SeniorCustomerServiceMenu {
         this.getRequestAction();
     }
 
-    private redirectRequestCommand(): void {
-        this.redirectRequest.execute(user)
+    // private redirectRequestCommand(): void {
+    //     this.redirectRequest.execute(user)// TODO
 
-    }
+    // }
 
     private getRequestAction(): void {
         const rl = readline.createInterface({
