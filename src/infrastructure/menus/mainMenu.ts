@@ -3,7 +3,9 @@ import { AuthSystem } from "../../authSystem";
 import { AdministrationManagerMenu } from "./administrationManagerMenu";
 import { CustomerServiceMenu } from "./customerServiceMenu";
 import { FinancialManagerMenu } from "./financialManagerMenu";
+import { ProductionManagerMenu } from "./productionManagerMenu";
 import { SeniorCustomerServiceMenu } from "./seniorCustomerServiceMenu";
+import { ServiceManagerMenu } from "./serviceManagerMenu";
 
 export class MainMenu {
     constructor(
@@ -13,6 +15,8 @@ export class MainMenu {
         private readonly seniorCustomerServiceMenu: SeniorCustomerServiceMenu,
         private readonly financialManagerMenu: FinancialManagerMenu,
         private readonly administrationManagerMenu: AdministrationManagerMenu,
+        private readonly productionManagerMenu: ProductionManagerMenu,
+        private readonly serviceManagerMenu: ServiceManagerMenu,
     ) {}
 
     displayMenu(): void {
@@ -75,11 +79,11 @@ export class MainMenu {
                             // this._.displayMenu();
                             // return;
                         case "PM":
-                            // this.projectManagerMenu.displayMenu();
-                            // return;
+                            this.productionManagerMenu.displayMenu(curr_user);
+                            return;
                         case "SM":
-                            // this._.displayMenu();
-                            // return;
+                            this.serviceManagerMenu.displayMenu(curr_user);
+                            return;
                         case "VP":
                             // this.vicePresidentMenu.displayMenu();
                             // return;
