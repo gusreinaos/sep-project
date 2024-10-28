@@ -1,17 +1,13 @@
 import * as readline from "readline";
 import { GetAssignedRequests } from "../../application/getAssignedRequests";
-import { RedirectRequest } from "../../application/redirectRequest";
+import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { Request, Status } from "../../domain/request";
 import { User } from "../../domain/user";
-import { UserRepository } from "../repositories/userRepository";
 
 export class AdministrationManagerMenu {
-    getAllRequests: any;
-    updateRequestByStatus: any;
     constructor(
         private readonly getAssignedRequests: GetAssignedRequests,
-        private readonly redirectRequest: RedirectRequest,
-        private readonly userRepositoy: UserRepository
+        private readonly updateRequestByStatus: UpdateRequestByStatus
     ) {}
 
     private curr_user: any;
@@ -58,8 +54,9 @@ export class AdministrationManagerMenu {
             console.log("No assigned requests.");
         } else {
             console.log("Assigned Requests:");
-            requests.forEach(request => {
-                console.log(`Request ID: ${request.requestId}`);
+            requests.forEach((request: Request) => {
+                const print = JSON.stringify(request, null, 2); //pretty print
+                console.log(`Request: ${print}`);
             });
         }
         this.displayMenu(curr_user);
