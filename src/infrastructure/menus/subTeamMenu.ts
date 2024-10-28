@@ -103,6 +103,8 @@ export class SubTeamMenu {
                 const curr_request: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
                 curr_request.eventDetails.budget = parseInt(budget);
 
+                this.updateRequest.execute(requestId, curr_request, this.curr_user.role);
+
                 //send to production manager
                 const message = this.redirectRequest.execute(
                     this.userRepositoy.getUsersByRole(Role.ProductionManager)[0].userId,

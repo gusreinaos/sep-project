@@ -21,8 +21,8 @@ export class FinancialManagerMenu {
         console.log("\n--- Financial Manager Menu ---");
         console.log("1. View Assigned Requests");
         console.log("2. Add comments to Assigned Request (completion redirects request)");
-        console.log("4. Approve Sub-team budget");
-        console.log("3. Exit");
+        console.log("3. Approve Sub-team budget");
+        console.log("4. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
     }
@@ -41,7 +41,7 @@ export class FinancialManagerMenu {
                 case "2":
                     this.addCommentsToRequest();
                     break;
-                case "2":
+                case "3":
                     this.delegateSubTeamBudget();
                     break;
                 case "4":
@@ -105,8 +105,8 @@ export class FinancialManagerMenu {
             output: process.stdout,
         });
 
-        rl.question("Enter request Id to approve", (requestId) => {
-            rl.question("Do you want to approve or reject", (verdict) => {
+        rl.question("Enter request Id: ", (requestId) => {
+            rl.question("Do you want to approve or reject? (ENTER: approve or reject): ", (verdict) => {
                 const curr_request: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
 
                 if (verdict.trim().toLowerCase() === "approve") {

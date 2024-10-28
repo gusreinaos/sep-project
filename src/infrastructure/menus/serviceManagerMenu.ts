@@ -84,10 +84,9 @@ export class ServiceManagerMenu {
         if(requests.length === 0) {
             console.log("No assigned requests.");
         } else {
-            console.log("Assigned Requests:");
+            console.log("SubTeam Comments:");
             requests.forEach(request => {
-                console.log("Event Details");
-                console.log(`Budget: ${request.eventDetails.budget}, Comments: ${request.eventDetails.details}`);
+                console.log(`RequestID: ${request.requestId}, Budget: ${request.eventDetails.budget}, Comments: ${request.eventDetails.details}`);
             });
         }
         this.displayMenu(this.curr_user);
@@ -103,9 +102,9 @@ export class ServiceManagerMenu {
             const message = this.redirectRequest.execute(
                 this.userRepositoy.getUsersByRole(Role.FinancialManager)[0].userId, requestId);
                 
-                console.log(message);
-                rl.close();
-                this.displayMenu(this.curr_user);
+            console.log(message);
+            rl.close();
+            this.displayMenu(this.curr_user);
         });    
     }
 
