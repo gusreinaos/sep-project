@@ -1,6 +1,5 @@
-import { User } from "../../domain/user";
 import { Role } from "../../domain/types";
-import { Request } from "../../domain/request";
+import { User } from "../../domain/user";
 
 export class UserRepository {
     private users: User[] = [];
@@ -43,5 +42,9 @@ export class UserRepository {
     // Get a single user by ID
     getUserById(userId: string): User | undefined {
         return this.users.find(user => user.userName === userId);
+    }
+
+    getUserByUsername(username: string): User | undefined {
+        return this.users.find(user => user.userName === username);
     }
 }

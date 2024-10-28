@@ -1,8 +1,6 @@
-import { Status } from "../domain/request";
+import { Request } from "../domain/request";
 import { Role } from "../domain/types";
 import { RequestRepository } from "../infrastructure/repositories/requestRepository";
-import { Request } from "../domain/request";
-import { UserRepository } from "../infrastructure/repositories/userRepository";
 
 export class RedirectRequest {
 

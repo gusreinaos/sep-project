@@ -1,26 +1,13 @@
 import { User } from "./domain/user";
-import { Role } from "./domain/types";
-import { UserManager } from "./infrastructure/repositories/userRepository";
+import { UserRepository } from "./infrastructure/repositories/userRepository";
 
 export class AuthSystem {
-    constructor(userManager: UserManager) {
-        this.userManager = userManager;
-        this.users = [
-            new User("john", Role.CustomerService, this.userManager),
-            new User("jane", Role.SeniorCustomerService, this.userManager),
-            new User("alice", Role.FinancialManager, this.userManager),
-            new User("tobias", Role.ProductionManager, this.userManager),
-            new User("jack", Role.ServiceManager, this.userManager),
-            new User("vp", Role.VP, this.userManager),
-        ];
-    }
+    constructor(private readonly userRepository: UserRepository) {}
 
-    public userManager: UserManager;
-    public users: User[];
     private currentUser: User | null = null;
 
     login(username: string): string {
-        const user = this.users.find(u => u.username === username);
+        const user = this.userRepository.getUserByUsername(username);
         if (user) {
             this.currentUser = user;
             return `Welcome, ${username}! Role: ${user.role}`;
