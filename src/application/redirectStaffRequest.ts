@@ -5,15 +5,12 @@ export class RedirectStaffRequest {
 
     constructor(private readonly staffRequestRepository: StaffRequestRepository) {}
 
-    execute(targetId: string, staffRequestId: string): string{
-       
-        const requestToRedirect = this.staffRequestRepository.getStaffRequestById(staffRequestId);
-        if (!requestToRedirect) return "Request not found.";
-        //const currReq = this.requests.splice(requestToRedirect, 1)[0]; 
-        const updatedRequest = this.staffRequestRepository.updateStaffRequest(staffRequestId, new StaffRequest(staffRequestId, targetId, requestToRedirect.requestingDepartment, requestToRedirect.yearsOfExperience, requestToRedirect.jobTitle, requestToRedirect.jobDescription, requestToRedirect.contractType))
+    execute(targetId: string, staffRequest: StaffRequest): string{
+        console.log("Target: ", targetId)
+        const updatedRequest = this.staffRequestRepository.updateStaffRequest(staffRequest.requestId, new StaffRequest(staffRequest.requestId, targetId, staffRequest.requestingDepartment, staffRequest.yearsOfExperience, staffRequest.jobTitle, staffRequest.jobDescription, staffRequest.contractType, staffRequest.staffStatus))
 
         if(!updatedRequest) return "Request not updated"
-        return `Request ${staffRequestId} has been redirected.`;
+        return `Request ${staffRequest.requestId} has been redirected.`;
 
         
     }

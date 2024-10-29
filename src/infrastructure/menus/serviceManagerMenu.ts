@@ -3,10 +3,12 @@ import { GetAssignedRequests } from "../../application/getAssignedRequests";
 import { RedirectRequest } from "../../application/redirectRequest";
 import { CreateStaffRequest } from "../../application/staff/createStaffRequest";
 import { GetAllStaff } from "../../application/staff/getAllStaff";
+import { GetAssignedStaffRequests } from "../../application/staff/getAssignedStaffRequests";
 import { GetAvailableStaff } from "../../application/staff/getAvailableStaff";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { Request, Status } from "../../domain/request";
 import { Staff } from "../../domain/staff";
+import { StaffRequest } from "../../domain/staffRequest";
 import { Role } from "../../domain/types";
 import { User } from "../../domain/user";
 import { RequestRepository } from "../repositories/requestRepository";
@@ -22,7 +24,8 @@ export class ServiceManagerMenu {
         private readonly userRepositoy: UserRepository,
         private readonly updateRequestByStatus: UpdateRequestByStatus,
         private readonly createStaffRequest: CreateStaffRequest,
-        private readonly requestRepository: RequestRepository
+        private readonly requestRepository: RequestRepository,
+        private readonly getAssignedStaffRequests: GetAssignedStaffRequests
     ) {}
 
     private curr_user: any;
@@ -35,7 +38,8 @@ export class ServiceManagerMenu {
         console.log("4. Request Budget check from Financial Manager");
         console.log("5. Update application status to in-progress");
         console.log("6. Request additional staff");
-        console.log("7. Exit");
+        console.log("7. List additional staff requests");
+        console.log("8. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
     }
@@ -73,6 +77,9 @@ export class ServiceManagerMenu {
                     this.requestAdditionalStaff();
                     break;
                 case "7":
+                    rl.close();
+                    this.getAdditionalStaffRequests();
+                case "8":
                     console.log("Exiting the Production Manager Menu.");
                     rl.close();
                     return;
@@ -167,20 +174,33 @@ export class ServiceManagerMenu {
             output: process.stdout,
         });
 
-            rl.question("Enter staff ID: ", (staffId) => {
-                rl.question("Enter requesting department: ", (requestingDepartment) => {
-                    rl.question("Enter years of experience needed: ", (yearsOfExperience) => {
-                        rl.question("Enter job title: ", (jobTittle) => {
-                            rl.question("Enter job description: ", (jobDescription) => {
-                                rl.question("Enter contract type: ", (contractType) => {
-                                    const response = this.createStaffRequest.execute(staffId, requestingDepartment, Number(yearsOfExperience), jobTittle, jobDescription, contractType); 
-                                    rl.close();
-                                    this.displayMenu(this.curr_user);
-                                });
+            rl.question("Enter requesting department: ", (requestingDepartment) => {
+                rl.question("Enter years of experience needed: ", (yearsOfExperience) => {
+                    rl.question("Enter job title: ", (jobTittle) => {
+                        rl.question("Enter job description: ", (jobDescription) => {
+                            rl.question("Enter contract type: ", (contractType) => {
+                                const response = this.createStaffRequest.execute(this.userRepositoy.getUsersByRole(Role.HR)[0].userId, requestingDepartment, Number(yearsOfExperience), jobTittle, jobDescription, contractType); 
+                                rl.close();
+                                if(response) console.log("Staff request has been created successfully and redirected to the HR department")
+                                this.displayMenu(this.curr_user);
                             });
                         });
                     });
                 });
             });
+    }
+
+    private getAdditionalStaffRequests(): void {
+        const staffRequests = this.getAssignedStaffRequests.execute(this.curr_user.userId)
+        if(staffRequests.length === 0) {
+            console.log("No available requests")
+        }
+        else {
+            staffRequests.forEach((staffRequest: StaffRequest) => {
+                console.log(`ID: ${staffRequest.requestId}, Department: ${staffRequest.requestingDepartment}, Job title: ${staffRequest.jobTitle}, Years of experience: ${staffRequest.yearsOfExperience}, Status ${staffRequest.staffStatus}`);
+            });
+            console.log("")
+        }
+        this.displayMenu(this.curr_user)
     }
 }

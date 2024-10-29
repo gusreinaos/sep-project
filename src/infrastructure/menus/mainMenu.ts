@@ -3,6 +3,7 @@ import { AuthSystem } from "../../authSystem";
 import { AdministrationManagerMenu } from "./administrationManagerMenu";
 import { CustomerServiceMenu } from "./customerServiceMenu";
 import { FinancialManagerMenu } from "./financialManagerMenu";
+import { HumanResourceMenu } from "./humanResourceMenu";
 import { ProductionManagerMenu } from "./productionManagerMenu";
 import { SeniorCustomerServiceMenu } from "./seniorCustomerServiceMenu";
 import { ServiceManagerMenu } from "./serviceManagerMenu";
@@ -18,7 +19,8 @@ export class MainMenu {
         private readonly administrationManagerMenu: AdministrationManagerMenu,
         private readonly productionManagerMenu: ProductionManagerMenu,
         private readonly serviceManagerMenu: ServiceManagerMenu,
-        private readonly subTeamMenu: SubTeamMenu
+        private readonly subTeamMenu: SubTeamMenu,
+        private readonly humanResourceMenu: HumanResourceMenu
     ) {}
 
     displayMenu(): void {
@@ -78,8 +80,8 @@ export class MainMenu {
                             this.administrationManagerMenu.displayMenu(curr_user);
                             return;
                         case "HR":
-                            // this._.displayMenu();
-                            // return;
+                            this.humanResourceMenu.displayMenu(curr_user)
+                            return;
                         case "PM":
                             this.productionManagerMenu.displayMenu(curr_user);
                             return;

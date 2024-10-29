@@ -7,8 +7,8 @@
   "settings": {
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
-      "source.organizeImports": true,
-      "source.sortMembers": true
+      "source.organizeImports": "explicit",
+      "source.sortMembers": "explicit"
     },
     "eslint.validate": [
       "javascript",

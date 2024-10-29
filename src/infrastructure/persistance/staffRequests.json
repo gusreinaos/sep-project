@@ -1,1 +1,14 @@
-[]
+{
+  "staffRequests": [
+    {
+      "requestId": "wwq8z9qk1",
+      "staffId": "6",
+      "requestingDepartment": "Marketing",
+      "yearsOfExperience": 3,
+      "jobTitle": "Cuties",
+      "jobDescription": "Cuties",
+      "contractType": "PartTime",
+      "staffStatus": "Accepted"
+    }
+  ]
+}

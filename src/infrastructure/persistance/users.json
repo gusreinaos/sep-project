@@ -34,6 +34,11 @@
       "userId": "7",
       "userName": "stUser",
       "role": "ST"
+    },
+    {
+      "userId": "8",
+      "userName": "hrUser",
+      "role": "HR"
     }
   ]
 }

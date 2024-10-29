@@ -3,14 +3,17 @@ import { GetAllRequests } from "../../application/getAllRequests";
 import { RedirectRequest } from "../../application/redirectRequest";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { Request } from "../../domain/request";
+import { Role } from "../../domain/types";
 import { RequestRepository } from "../repositories/requestRepository";
+import { UserRepository } from "../repositories/userRepository";
 
 export class SeniorCustomerServiceMenu {
     constructor(
         private readonly getAllRequests: GetAllRequests,
         private readonly updateRequestByStatus: UpdateRequestByStatus,
         private readonly redirectRequest: RedirectRequest,
-        private readonly requestRepository: RequestRepository) {}
+        private readonly requestRepository: RequestRepository,
+        private readonly userRepository: UserRepository) {}
 
     displayMenu(): void {
         console.log("\n--- Senior Customer Service Menu ---");
@@ -91,19 +94,11 @@ export class SeniorCustomerServiceMenu {
 
             rl.question("Do you want to approve the request's feasibility and redirect it to the financial manager? (yes/no) ", (action) => {
                 if (action.trim().toLowerCase() === "yes") {
-                    rl.question("Specify your financial manager ID: ", (targetId) => {
-                        if (!targetId.trim()) {
-                            console.log("Invalid Financial Manager ID. Please provide a valid ID.");
-                            rl.close();
-                            this.displayMenu();
-                            return;
-                        }
-                        const request = this.requestRepository.getRequestById(requestId)
-                        this.redirectRequest.execute(targetId, request!);
-                        console.log(`Request with ID ${requestId} has been redirected to Financial Manager with ID ${targetId}.`);
-                        rl.close();
-                        this.displayMenu();
-                    });
+                    const request = this.requestRepository.getRequestById(requestId)
+                    this.redirectRequest.execute(this.userRepository.getUsersByRole(Role.FinancialManager)[0].userId, request!);
+                    console.log(`Request with ID ${requestId} has been redirected to Financial Manager.`);
+                    rl.close();
+                    this.displayMenu();
                 } else if (action.trim().toLowerCase() === "no") {
                     console.log("Request not redirected.");
                     rl.close();

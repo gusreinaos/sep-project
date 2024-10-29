@@ -6,15 +6,16 @@ import { User } from "../../domain/user";
 export class UserRepository {
     private users: User[] = [];
     private filePath: string = path.join(__dirname, '../persistance/users.json');
+    private test: boolean;
 
     removeAllUsers(): void {
         this.users = [];
         this.saveUsers();
     }
 
-    private test: boolean = false;
     constructor(test: boolean) {
-        if(!test) this.loadUsers();
+        this.test = test;
+        if(!this.test) this.loadUsers();
     }
 
 
@@ -55,7 +56,7 @@ export class UserRepository {
     // Add a new user to the repository and save to file
     addUser(user: User): void {
         this.users.push(user);
-        if(!test) this.saveUsers();
+        if(!this.test) this.saveUsers();
     }
 
     // Remove a user by their ID and save to file
@@ -63,7 +64,7 @@ export class UserRepository {
         const index = this.users.findIndex(user => user.userName === userId);
         if (index !== -1) {
             this.users.splice(index, 1);
-            if(!test) this.saveUsers();
+            if(!this.test) this.saveUsers();
             return true;
         }
         return false;
@@ -74,7 +75,7 @@ export class UserRepository {
         const user = this.users.find(user => user.userName === userId);
         if (user) {
             Object.assign(user, updatedData);
-            if(!test) this.saveUsers();
+            if(!this.test) this.saveUsers();
             return user;
         }
         return null;
