@@ -1,13 +1,18 @@
 import * as readline from "readline";
 import { GetAssignedRequests } from "../../application/getAssignedRequests";
+import { RedirectRequest } from "../../application/redirectRequest";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { Request, Status } from "../../domain/request";
+import { Role } from "../../domain/types";
 import { User } from "../../domain/user";
+import { UserRepository } from "../repositories/userRepository";
 
 export class AdministrationManagerMenu {
     constructor(
         private readonly getAssignedRequests: GetAssignedRequests,
-        private readonly updateRequestByStatus: UpdateRequestByStatus
+        private readonly updateRequestByStatus: UpdateRequestByStatus,
+        private readonly redirectRequest: RedirectRequest,
+        private readonly userRepository: UserRepository
     ) {}
 
     private curr_user: any;
@@ -102,8 +107,12 @@ export class AdministrationManagerMenu {
             rl.question("Do you want to approve or reject the request? (Type 'approve' or 'reject'): ", (action) => {
 
                 if (action.trim().toLowerCase() === "approve") {
-                    this.updateRequestByStatus.execute(requestId, Status.Approved)
+                    const request = this.updateRequestByStatus.execute(requestId, Status.Approved)
                     console.log(`Request with ID ${requestId} has been approved.`);
+                    
+                    const message = this.redirectRequest.execute(
+                        this.userRepository.getUsersByRole(Role.FinancialManager)[0].userId, request!);
+
                 } else if (action.trim().toLowerCase() === "reject") {
                     this.updateRequestByStatus.execute(requestId, Status.Rejected)
                     console.log(`Request with ID ${requestId} has been rejected.`);
