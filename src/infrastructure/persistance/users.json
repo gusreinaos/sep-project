@@ -29,6 +29,11 @@
       "userId": "6",
       "userName": "smUser",
       "role": "SM"
+    },
+    {
+      "userId": "7",
+      "userName": "stUser",
+      "role": "ST"
     }
   ]
 }
