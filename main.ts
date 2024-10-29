@@ -15,6 +15,7 @@ import { MainMenu } from "./src/infrastructure/menus/mainMenu";
 import { ProductionManagerMenu } from "./src/infrastructure/menus/productionManagerMenu";
 import { SeniorCustomerServiceMenu } from "./src/infrastructure/menus/seniorCustomerServiceMenu";
 import { ServiceManagerMenu } from "./src/infrastructure/menus/serviceManagerMenu";
+import { SubTeamMenu } from "./src/infrastructure/menus/subTeamMenu";
 import { RequestRepository } from "./src/infrastructure/repositories/requestRepository";
 import { StaffRepository } from "./src/infrastructure/repositories/staffRepository";
 import { StaffRequestRepository } from "./src/infrastructure/repositories/staffRequestRepository";
@@ -43,6 +44,7 @@ const financialManagerMenu = new FinancialManagerMenu(getAssignedRequests, redir
 const administrationManagerMenu = new AdministrationManagerMenu(getAssignedRequests, updateRequestByStatus, redirectRequest, userRepository);
 const productionManagerMenu = new ProductionManagerMenu(getAvailableStaff, getAllStaff, getAssignedRequests, redirectRequest, userRepository, updateRequestByStatus, createStaffRequest, requestRepository);
 const serviceManagerMenu = new ServiceManagerMenu(getAvailableStaff,getAllStaff, getAssignedRequests, redirectRequest, userRepository,  updateRequestByStatus, createStaffRequest, requestRepository);
+const subTeamMenu = new SubTeamMenu(updateRequest, redirectRequest, userRepository, getAssignedRequests);
 
 // Instantiate the main menu
 const mainMenu = new MainMenu(
@@ -52,7 +54,8 @@ const mainMenu = new MainMenu(
     financialManagerMenu,
     administrationManagerMenu,
     productionManagerMenu,
-    serviceManagerMenu
+    serviceManagerMenu,
+    subTeamMenu
 );
 
 // Set up users with different roles in the AuthSystem

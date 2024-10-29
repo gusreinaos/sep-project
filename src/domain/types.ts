@@ -6,7 +6,8 @@ export enum Role {
     HR = "HR",
     ProductionManager = "PM",
     ServiceManager = "SM",
-    VP = "VP"
+    VP = "VP",
+    SubTeamUser = "ST"
 }
 
 export enum StaffRole {

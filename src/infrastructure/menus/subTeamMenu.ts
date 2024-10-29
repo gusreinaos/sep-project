@@ -79,10 +79,10 @@ export class SubTeamMenu {
 
         rl.question("Enter chosen request id: ", (requestId) => {
             rl.question("Enter plans for the event: ", (plans) => {
-                const curr_request: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
-                curr_request.eventDetails.details = plans;
+                const updatedRequest: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
+                updatedRequest.eventDetails.details = plans;
 
-                const message = this.updateRequest.execute(requestId, curr_request, this.curr_user.role);
+                const message = this.updateRequest.execute(requestId, updatedRequest);
                 
                 console.log(message);
                 rl.close();
@@ -100,15 +100,15 @@ export class SubTeamMenu {
 
         rl.question("Enter chosen request id: ", (requestId) => {
             rl.question("Enter propsed budget for the event (submits to manager): ", (budget) => {
-                const curr_request: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
-                curr_request.eventDetails.budget = parseInt(budget);
+                const updatedRequest: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
+                updatedRequest.eventDetails.budget = parseInt(budget);
 
-                this.updateRequest.execute(requestId, curr_request, this.curr_user.role);
+                this.updateRequest.execute(requestId, updatedRequest);
 
                 //send to production manager
                 const message = this.redirectRequest.execute(
                     this.userRepositoy.getUsersByRole(Role.ProductionManager)[0].userId,
-                    requestId);
+                    updatedRequest);
 
                 console.log(message);
 
