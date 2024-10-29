@@ -28,6 +28,7 @@ export class CustomerServiceMenu {
                     //this.registerClient();
                     break;
                 case "2":
+                    rl.close();
                     this.createEventRequestInput();
                     break;
                 case "3":
@@ -39,7 +40,7 @@ export class CustomerServiceMenu {
                     this.displayMenu();
                     break;
             }
-            rl.close();
+            
         });
     }
 
