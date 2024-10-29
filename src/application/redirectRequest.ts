@@ -5,15 +5,12 @@ export class RedirectRequest {
 
     constructor(private readonly requestRepository: RequestRepository) {}
 
-    execute(targetId: string, requestId: string): string{
+    execute(targetId: string, request: Request): string{
        
-        const requestToRedirect = this.requestRepository.getRequestById(requestId);
-        if (!requestToRedirect) return "Request not found.";
-        //const currReq = this.requests.splice(requestToRedirect, 1)[0]; 
-        const updatedRequest = this.requestRepository.updateRequest(requestId, new Request(requestId, requestToRedirect.clientId, targetId, requestToRedirect.eventName, requestToRedirect.proposedBudget, requestToRedirect.staffRequirement, requestToRedirect.date, requestToRedirect.details, requestToRedirect.status))
+        const updatedRequest = this.requestRepository.updateRequest(request.requestId, new Request(request.requestId, request.clientId, targetId, request.eventName, request.proposedBudget, request.staffRequirement, request.date, request.details, request.status, request.financialFeedback))
 
         if(!updatedRequest) return "Request not updated"
-        return `Request ${requestId} has been redirected.`;
+        return `Request ${request.requestId} has been redirected.`;
 
         
     }

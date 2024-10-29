@@ -23,7 +23,9 @@ export class Request {
         staffRequirement: number,
         date: Date,
         details: string,
-        status: Status
+        status: Status,
+        financialFeedback: string = ""
+
     ) {
         this.requestId = requestId;
         this.clientId = clientId;
@@ -34,7 +36,7 @@ export class Request {
         this.date = date;
         this.details = details;
         this.status = status;
-        this.financialFeedback = "";
+        this.financialFeedback = financialFeedback;
         this.eventDetails = {
             id: requestId,
             details: "",

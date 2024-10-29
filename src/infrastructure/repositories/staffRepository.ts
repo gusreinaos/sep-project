@@ -5,6 +5,7 @@ import { StaffRole } from "../../domain/types";
 
 export class StaffRepository {
     private staff: Staff[] = [];
+    
 
     private readonly filePath: string = path.join(__dirname, "../persistance/staff.json");
 

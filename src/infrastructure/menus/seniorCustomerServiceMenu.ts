@@ -1,12 +1,16 @@
 import * as readline from "readline";
 import { GetAllRequests } from "../../application/getAllRequests";
+import { RedirectRequest } from "../../application/redirectRequest";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
-import { Request, Status } from "../../domain/request";
+import { Request } from "../../domain/request";
+import { RequestRepository } from "../repositories/requestRepository";
 
 export class SeniorCustomerServiceMenu {
     constructor(
         private readonly getAllRequests: GetAllRequests,
-        private readonly updateRequestByStatus: UpdateRequestByStatus) {}
+        private readonly updateRequestByStatus: UpdateRequestByStatus,
+        private readonly redirectRequest: RedirectRequest,
+        private readonly requestRepository: RequestRepository) {}
 
     displayMenu(): void {
         console.log("\n--- Senior Customer Service Menu ---");
@@ -25,19 +29,24 @@ export class SeniorCustomerServiceMenu {
         rl.question("Select an option: ", (selection) => {
             switch (selection.trim()) {
                 case "1":
-                    this.reviewRequests()
+                    rl.close();
+                    this.reviewRequests();
                     break;
                 case "2":
-                    // this.redirectRequestCommand()
+                    rl.close();
+                    this.redirectRequestCommand();
+                    break; // Fixed the missing break statement
                 case "3":
+                    console.log("Exiting the menu.");
+                    rl.close();
+                    return;
+                default:
                     console.log("Invalid option. Please select again.");
                     this.displayMenu();
                     break;
             }
-            rl.close();
         });
     }
-
 
     private reviewRequests(): void {
         const requests = this.getAllRequests.execute();
@@ -50,43 +59,60 @@ export class SeniorCustomerServiceMenu {
         }
 
         requests.forEach((request: Request) => {
-            const print = JSON.stringify(request, null, 2); //pretty print
+            const print = JSON.stringify(request, null, 2); // Pretty print
             console.log(`Request: ${print}`);
         });
 
-        this.getRequestAction();
+        this.displayMenu()
+
     }
 
-    // private redirectRequestCommand(): void {
-    //     this.redirectRequest.execute(user)// TODO
 
-    // }
-
-    private getRequestAction(): void {
+    private redirectRequestCommand(): void {
         const rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout,
         });
 
-        rl.question("Enter the Request ID to approve or reject (or type 'exit' to return): ", (requestId) => {
+        rl.question("Enter the Request ID to review: ", (requestId) => {
             if (requestId.trim().toLowerCase() === "exit") {
                 this.displayMenu();
                 rl.close();
                 return;
             }
 
-            rl.question("Do you want to approve or reject the request? (Type 'approve' or 'reject'): ", (action) => {
-
-                if (action.trim().toLowerCase() === "approve") {
-                    this.updateRequestByStatus.execute(requestId, Status.Approved)
-                    console.log(`Request with ID ${requestId} has been approved.`);
-                } else if (action.trim().toLowerCase() === "reject") {
-                    this.updateRequestByStatus.execute(requestId, Status.Rejected)
-                    console.log(`Request with ID ${requestId} has been rejected.`);
-                }
-
+            // Check if requestId is valid (assumed to be non-empty)
+            if (!requestId.trim()) {
+                console.log("Invalid Request ID. Please enter a valid ID.");
                 rl.close();
                 this.displayMenu();
+                return;
+            }
+
+            rl.question("Do you want to approve the request's feasibility and redirect it to the financial manager? (yes/no) ", (action) => {
+                if (action.trim().toLowerCase() === "yes") {
+                    rl.question("Specify your financial manager ID: ", (targetId) => {
+                        if (!targetId.trim()) {
+                            console.log("Invalid Financial Manager ID. Please provide a valid ID.");
+                            rl.close();
+                            this.displayMenu();
+                            return;
+                        }
+                        const request = this.requestRepository.getRequestById(requestId)
+                        this.redirectRequest.execute(targetId, request!);
+                        console.log(`Request with ID ${requestId} has been redirected to Financial Manager with ID ${targetId}.`);
+                        rl.close();
+                        this.displayMenu();
+                    });
+                } else if (action.trim().toLowerCase() === "no") {
+                    console.log("Request not redirected.");
+                    rl.close();
+                    this.displayMenu();
+                } else {
+                    console.log("Invalid input. Please respond with 'yes' or 'no'.");
+                    rl.close();
+                    this.displayMenu();
+                }
             });
         });
     }

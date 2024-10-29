@@ -1,22 +1,17 @@
-import { Status } from "../domain/request";
-import { Role } from "../domain/types";
-import { RequestRepository } from "../infrastructure/repositories/requestRepository";
 import { Request } from "../domain/request";
+import { RequestRepository } from "../infrastructure/repositories/requestRepository";
 
 export class UpdateRequest {
 
     constructor(private readonly requestRepository: RequestRepository) {}
 
-    execute(requestId: string, updates: Partial<Request>, role: Role): string{
-        switch(role) {
-            case Role.SeniorCustomerService:
-                const requestToUpdate = this.requestRepository.getRequestById(requestId);
-                if (!requestToUpdate) return "Request not found. ";
-                Object.assign(requestToUpdate, updates);
-                return `Request ${requestId} updated successfully.`;
+    execute(requestId: string, updates: Request): Request | null{
 
-            default:
-                return "You do now have permission to update requests."
-        }
+        //console.log("Application: ", updates)
+
+        const requestToUpdate = this.requestRepository.getRequestById(requestId);
+        if (!requestToUpdate) return null;
+        const updatedRequest = this.requestRepository.updateRequest(requestId, updates)
+        return updatedRequest
     }
 }

@@ -9,6 +9,7 @@ import { Request, Status } from "../../domain/request";
 import { Staff } from "../../domain/staff";
 import { Role } from "../../domain/types";
 import { User } from "../../domain/user";
+import { RequestRepository } from "../repositories/requestRepository";
 import { UserRepository } from "../repositories/userRepository";
 
 export class ProductionManagerMenu {
@@ -19,7 +20,8 @@ export class ProductionManagerMenu {
         private readonly redirectRequest: RedirectRequest,
         private readonly userRepositoy: UserRepository,
         private readonly updateRequestByStatus: UpdateRequestByStatus,
-        private readonly createStaffRequest: CreateStaffRequest
+        private readonly createStaffRequest: CreateStaffRequest,
+        private readonly requestRepository: RequestRepository,
     ) {}
 
     private curr_user: any;
@@ -129,8 +131,9 @@ export class ProductionManagerMenu {
         });
 
         rl.question("Enter request Id to send to financial manager: ", (requestId) => {
+            const request = this.requestRepository.getRequestById(requestId)
             const message = this.redirectRequest.execute(
-                this.userRepositoy.getUsersByRole(Role.FinancialManager)[0].userId, requestId);
+                this.userRepositoy.getUsersByRole(Role.FinancialManager)[0].userId, request!);
                 
             console.log(message);
             rl.close();
