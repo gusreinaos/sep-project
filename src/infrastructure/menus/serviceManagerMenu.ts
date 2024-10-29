@@ -1,7 +1,7 @@
 import * as readline from "readline";
 import { GetAssignedRequests } from "../../application/getAssignedRequests";
 import { RedirectRequest } from "../../application/redirectRequest";
-import { GetAvailableStaff } from "../../application/staff/getAvailabelStaff";
+import { GetAvailableStaff } from "../../application/staff/getAvailableStaff";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { Request, Status } from "../../domain/request";
 import { Staff } from "../../domain/staff";

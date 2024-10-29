@@ -1,3 +1,5 @@
 /node_modules
 /dist
-*.js
+/src/*js
+coverage
+jest.config.js
