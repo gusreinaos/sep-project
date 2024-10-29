@@ -3,6 +3,7 @@ import { StaffRole } from "../../domain/types";
 
 export class StaffRepository {
     private staff: Staff[] = [];
+    
 
     // Add a new staff to the repository
     addStaff(staff: Staff): void {

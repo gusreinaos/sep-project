@@ -12,7 +12,7 @@ export class RequestRepository {
 
     removeAllRequests(): void {
         this.requests = [];
-        this.saveRequests();
+        this.saveRequests(); // Save the empty array to the file
     }
 
     private loadRequests(): void {
@@ -48,13 +48,22 @@ export class RequestRepository {
         return false; 
     }
 
-    updateRequest(requestId: string, updatedData: Partial<Request>): Request | null {
-        const request = this.requests.find(request => request.requestId === requestId);
-        if (request) {
-            Object.assign(request, updatedData);
-            this.saveRequests();
-            return request; 
+    updateRequest(requestId: string, updatedData: Request): Request | null {
+        const requestIndex = this.requests.findIndex(request => request.requestId === requestId);
+    
+        if (requestIndex !== -1) {
+            this.requests.splice(requestIndex, 1)[0];
+            console.log("From repository: ", updatedData.financialFeedback)
+            const updatedRequest = new Request(updatedData.requestId, updatedData.clientId, updatedData.staffId, updatedData.eventName, updatedData.proposedBudget, updatedData.staffRequirement, updatedData.date, updatedData.details, updatedData.status, updatedData.financialFeedback)
+            console.log("Updated request: ", updatedRequest)
+            this.requests.push(updatedRequest);
+    
+            console.log("Requests after pushing: ", this.requests);
+            this.saveRequests(); 
+            return updatedRequest; 
         }
+        
+        console.log("Request not found for ID:", requestId); 
         return null; 
     }
 

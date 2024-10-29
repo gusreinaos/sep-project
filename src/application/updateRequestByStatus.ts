@@ -10,7 +10,7 @@ export class UpdateRequestByStatus {
         const requestToUpdate = this.requestRepository.getRequestById(requestId);
         if (!requestToUpdate) return "Request not found. ";
 
-        const newRequest = new Request(requestToUpdate!.requestId, requestToUpdate!.clientId, requestToUpdate!.staffId, requestToUpdate!.eventName, requestToUpdate!.proposedBudget, requestToUpdate!.staffRequirement, requestToUpdate!.date, requestToUpdate!.details, status)
+        const newRequest = new Request(requestToUpdate!.requestId, requestToUpdate!.clientId, requestToUpdate!.staffId, requestToUpdate!.eventName, requestToUpdate!.proposedBudget, requestToUpdate!.staffRequirement, requestToUpdate!.date, requestToUpdate!.details, status, requestToUpdate.financialFeedback)
         Object.assign(requestToUpdate, newRequest);
         return `Request ${requestId} updated successfully.`;
 

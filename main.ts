@@ -36,11 +36,11 @@ const createStaffRequest = new CreateStaffRequest(staffRequestRepository)
 // Create instances of each menu
 const authSystem = new AuthSystem(userRepository);
 const customerServiceMenu = new CustomerServiceMenu(createEventRequest);
-const seniorCustomerServiceMenu = new SeniorCustomerServiceMenu(getAllRequests, updateRequestByStatus);
+const seniorCustomerServiceMenu = new SeniorCustomerServiceMenu(getAllRequests, updateRequestByStatus, redirectRequest, requestRepository);
 const financialManagerMenu = new FinancialManagerMenu(getAssignedRequests, redirectRequest, userRepository, updateRequest);
 const administrationManagerMenu = new AdministrationManagerMenu(getAssignedRequests, updateRequestByStatus);
-const productionManagerMenu = new ProductionManagerMenu(getAvailableStaff, getAssignedRequests, redirectRequest, userRepository, updateRequestByStatus);
-const serviceManagerMenu = new ServiceManagerMenu(getAvailableStaff, getAssignedRequests, redirectRequest, userRepository,  updateRequestByStatus, createStaffRequest);
+const productionManagerMenu = new ProductionManagerMenu(getAvailableStaff, getAssignedRequests, redirectRequest, userRepository, requestRepository, updateRequestByStatus);
+const serviceManagerMenu = new ServiceManagerMenu(getAvailableStaff, getAssignedRequests, redirectRequest, userRepository,  updateRequestByStatus, createStaffRequest, requestRepository);
 
 // Instantiate the main menu
 const mainMenu = new MainMenu(

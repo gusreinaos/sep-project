@@ -85,13 +85,12 @@ export class FinancialManagerMenu {
                 const role = Role.CustomerService;
                 
                 const requests = this.getAssignedRequests.execute(this.curr_user.userId)
-                if(requests.length > 0) {    
+                
+                if(requests.length > 0) {  
                     const newRequest = requests.filter(request => request.requestId === requestId)[0]
                     newRequest.financialFeedback = financialFeedback;
-                    this.updateRequest.execute(requestId, newRequest, this.curr_user.role)
-                    const message = this.redirectRequest.execute(
-                        this.userRepositoy.getUsersByRole(Role.AdminManager)[0].userId,
-                        requestId);
+                    const updatedRequest = this.updateRequest.execute(requestId, newRequest)
+                    const message = this.redirectRequest.execute(this.userRepositoy.getUsersByRole(Role.AdminManager)[0].userId, updatedRequest!);
 
                     console.log(message);
 
@@ -114,11 +113,11 @@ export class FinancialManagerMenu {
 
                 if (verdict.trim().toLowerCase() === "approve") {
                     curr_request.budgetApproved = true;
-                    this.updateRequest.execute(requestId, curr_request ,this.curr_user.role)
+                    const updatedRequest = this.updateRequest.execute(requestId, curr_request)
 
                     this.redirectRequest.execute(
                         this.userRepositoy.getUsersByRole(Role.ProductionManager)[0].userId,
-                        requestId);
+                        updatedRequest!);
     
                     console.log(`Request with ID ${requestId} has been approved.`);
                 } else if (verdict.trim().toLowerCase() === "reject") {
