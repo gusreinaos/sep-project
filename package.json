@@ -6,7 +6,8 @@
     "dev": "tsc main.ts && node main.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix --ext .js,.jsx .",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "clear_jest": "jest --clearCache"
   },
   "keywords": [],
   "author": "",

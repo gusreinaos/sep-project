@@ -1,6 +1,5 @@
 import { UpdateRequest } from "../src/application/updateRequest";
 import { Request, Status } from "../src/domain/request";
-import { Role } from "../src/domain/types";
 import { RequestRepository } from "../src/infrastructure/repositories/requestRepository";
 
 describe("UpdateRequest", () => {
@@ -10,6 +9,7 @@ describe("UpdateRequest", () => {
     beforeEach(() => {
         // Mock the RequestRepository
         requestRepositoryMock = {
+            test: true,
             addRequest: jest.fn(),
             getAllRequests: jest.fn(),
             removeRequest: jest.fn(),
@@ -24,54 +24,45 @@ describe("UpdateRequest", () => {
         updateRequest = new UpdateRequest(requestRepositoryMock);
     });
 
-    it("should update a request when the role is SeniorCustomerService", () => {
+    it("should update the request successfully", () => {
         const requestId = "requestId123";
-        const updates = { eventName: "Updated Event" };
-        const role = Role.SeniorCustomerService;
+        const existingRequest = new Request(requestId, "clientId", "staffId", "eventName", 1000, 5, new Date(), "details", Status.Created);
+        const updatedData = new Request(requestId, "clientId", "staffId", "updatedEventName", 1500, 8, new Date(), "updatedDetails", Status.InProgress);
 
-        // Mock the existing request to be returned from the repository
-        const mockRequest = new Request(requestId, "clientId", "staffId", "Old Event", 1000, 5, new Date(), "details", Status.Created);
-        requestRepositoryMock.getRequestById.mockReturnValue(mockRequest);
+        // Mock the repository to return an existing request and simulate update
+        requestRepositoryMock.getRequestById.mockReturnValue(existingRequest);
+        requestRepositoryMock.updateRequest.mockReturnValue(updatedData);
 
         // Execute the method
-        const result = updateRequest.execute(requestId, updates, role);
+        const result = updateRequest.execute(requestId, updatedData);
 
-        // Verify that getRequestById was called and the updates were applied
+        // Check that getRequestById was called with the correct ID
         expect(requestRepositoryMock.getRequestById).toHaveBeenCalledWith(requestId);
-        expect(mockRequest.eventName).toBe("Updated Event"); // Check if the update was applied
-
-        // Verify the confirmation message
-        expect(result).toBe(`Request ${requestId} updated successfully.`);
+        
+        // Check that updateRequest was called with the correct parameters
+        expect(requestRepositoryMock.updateRequest).toHaveBeenCalledWith(requestId, updatedData);
+        
+        // Check that the updated request is returned
+        expect(result).toEqual(updatedData);
     });
 
-    it("should return 'Request not found.' if the request does not exist", () => {
+    it("should return null if the request does not exist", () => {
         const requestId = "nonExistingRequestId";
-        const updates = { eventName: "Updated Event" };
-        const role = Role.SeniorCustomerService;
+        const updates = new Request(requestId, "clientId", "staffId", "eventName", 1500, 8, new Date(), "updatedDetails", Status.InProgress);
 
-        // Mock the request to return null from the repository
+        // Mock getRequestById to return null (request not found)
         requestRepositoryMock.getRequestById.mockReturnValue(undefined);
 
         // Execute the method
-        const result = updateRequest.execute(requestId, updates, role);
+        const result = updateRequest.execute(requestId, updates);
 
-        // Verify that getRequestById was called
+        // Verify that getRequestById was called with the correct ID
         expect(requestRepositoryMock.getRequestById).toHaveBeenCalledWith(requestId);
-        expect(result).toBe("Request not found. ");
-    });
-
-    it("should deny permission when the role is not SeniorCustomerService", () => {
-        const requestId = "requestId123";
-        const updates = { eventName: "Updated Event" };
-        const role = Role.CustomerService; // Role without permission
-
-        // Execute the method
-        const result = updateRequest.execute(requestId, updates, role);
-
-        // Verify that getRequestById was not called
-        expect(requestRepositoryMock.getRequestById).not.toHaveBeenCalled();
-
-        // Verify the permission denial message
-        expect(result).toBe("You do now have permission to update requests.");
+        
+        // Verify that updateRequest was not called, as there was no request to update
+        expect(requestRepositoryMock.updateRequest).not.toHaveBeenCalled();
+        
+        // Check that the result is null
+        expect(result).toBeNull();
     });
 });

@@ -9,13 +9,14 @@ export class StaffRepository {
 
     private readonly filePath: string = path.join(__dirname, "../persistance/staff.json");
 
-    constructor() {
-        this.loadStaff();
+    private test: boolean = false;
+    constructor(test: boolean) {
+        if(!test) this.loadStaff();
     }
 
     removeAllRequests(): void {
         this.staff = [];
-        this.saveStaff();
+        if(!test) this.saveStaff();
     }
 
     private loadStaff(): void {
@@ -56,6 +57,7 @@ export class StaffRepository {
         const staff = this.staff.find(staffMember => staffMember.staffId === staffId);
         if (staff) {
             Object.assign(staff, updatedData);
+            if(!test) this.saveStaff();
             return staff;
         }
         return null;

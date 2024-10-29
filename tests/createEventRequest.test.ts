@@ -10,6 +10,7 @@ describe("CreateEventRequest", () => {
     beforeEach(() => {
         // Mock the RequestRepository
         requestRepositoryMock = {
+            test: true,
             addRequest: jest.fn(),
             getAllRequests: jest.fn(),
             removeRequest: jest.fn(),
@@ -19,6 +20,8 @@ describe("CreateEventRequest", () => {
             getRequestById: jest.fn(),
             getRequestByUserID: jest.fn(),
         } as unknown as jest.Mocked<RequestRepository>;
+
+        requestRepositoryMock
 
         // Initialize CreateEventRequest with the mocked repository
         createEventRequest = new CreateEventRequest(requestRepositoryMock);

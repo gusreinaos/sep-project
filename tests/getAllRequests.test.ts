@@ -1,42 +1,59 @@
-import { GetAllRequests } from "../src/application/getAllRequests"; // Adjust the import path
+import { GetAllRequests } from "../src/application/getAllRequests";
 import { Request, Status } from "../src/domain/request";
 import { RequestRepository } from "../src/infrastructure/repositories/requestRepository";
 
 describe("GetAllRequests", () => {
-    let requestRepository: RequestRepository;
-    let getAllRequests: GetAllRequests; 
+    let requestRepositoryMock: jest.Mocked<RequestRepository>;
+    let getAllRequests: GetAllRequests;
 
     beforeEach(() => {
-        // Initialize a real instance of RequestRepository
-        requestRepository = new RequestRepository();
+        // Mock the RequestRepository
+        requestRepositoryMock = {
+            test: true,
+            addRequest: jest.fn(),
+            getAllRequests: jest.fn(),
+            removeRequest: jest.fn(),
+            updateRequest: jest.fn(),
+            getRequestsByClient: jest.fn(),
+            getRequestsByStatus: jest.fn(),
+            getRequestById: jest.fn(),
+            getRequestByUserID: jest.fn(),
+        } as unknown as jest.Mocked<RequestRepository>;
 
-        // Initialize GetAllRequests with the RequestRepository instance
-        getAllRequests = new GetAllRequests(requestRepository);
-    });
-
-    it("should return an empty array if there are no requests", () => {
-        // Execute the method
-        const result = getAllRequests.execute();
-
-        // Verify the result is an empty array
-        expect(result).toEqual([]);
+        // Initialize GetAllRequests with the mocked repository
+        getAllRequests = new GetAllRequests(requestRepositoryMock);
     });
 
     it("should return all requests if they exist", () => {
-        // Mock data
         const mockRequests: Request[] = [
-            new Request("1", "Request 1", "staffId", "eventName", 80, 10, new Date(), "details", Status.Created),
-            new Request("2", "Request 2", "staffId", "eventName", 200, 5, new Date(), "details", Status.Created),
+            new Request("1", "client1", "staff1", "Event 1", 1000, 5, new Date(), "details", Status.Created),
+            new Request("2", "client2", "staff2", "Event 2", 1500, 8, new Date(), "details", Status.InProgress),
         ];
 
-        // Add the mock requests to the repository
-        requestRepository.addRequest(mockRequests[0]);
-        requestRepository.addRequest(mockRequests[1]);
+        // Mock getAllRequests to return the mockRequests
+        requestRepositoryMock.getAllRequests.mockReturnValue(mockRequests);
 
         // Execute the method
         const result = getAllRequests.execute();
 
-        // Verify the result is the same as the mocked data
+        // Verify that getAllRequests was called once
+        expect(requestRepositoryMock.getAllRequests).toHaveBeenCalledTimes(1);
+
+        // Check that the result matches the mock requests
         expect(result).toEqual(mockRequests);
+    });
+
+    it("should return an empty array if no requests exist", () => {
+        // Mock getAllRequests to return an empty array
+        requestRepositoryMock.getAllRequests.mockReturnValue([]);
+
+        // Execute the method
+        const result = getAllRequests.execute();
+
+        // Verify that getAllRequests was called once
+        expect(requestRepositoryMock.getAllRequests).toHaveBeenCalledTimes(1);
+
+        // Check that the result is an empty array
+        expect(result).toEqual([]);
     });
 });

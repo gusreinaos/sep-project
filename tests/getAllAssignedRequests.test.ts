@@ -3,49 +3,60 @@ import { Request, Status } from "../src/domain/request";
 import { RequestRepository } from "../src/infrastructure/repositories/requestRepository";
 
 describe("GetAssignedRequests", () => {
-    let requestRepository: RequestRepository;
+    let requestRepositoryMock: jest.Mocked<RequestRepository>;
     let getAssignedRequests: GetAssignedRequests;
 
     beforeEach(() => {
-        // Initialize a new instance of RequestRepository
-        requestRepository = new RequestRepository();
+        // Mock the RequestRepository
+        requestRepositoryMock = {
+            test: true,
+            addRequest: jest.fn(),
+            getAllRequests: jest.fn(),
+            removeRequest: jest.fn(),
+            updateRequest: jest.fn(),
+            getRequestsByClient: jest.fn(),
+            getRequestsByStatus: jest.fn(),
+            getRequestById: jest.fn(),
+            getRequestByUserID: jest.fn(),
+        } as unknown as jest.Mocked<RequestRepository>;
 
-        // Initialize GetAssignedRequests with the RequestRepository instance
-        getAssignedRequests = new GetAssignedRequests(requestRepository);
+        // Initialize GetAssignedRequests with the mocked repository
+        getAssignedRequests = new GetAssignedRequests(requestRepositoryMock);
     });
 
-    it("should return an empty array if there are no requests assigned to the user", () => {
+    it("should return assigned requests for the given user ID", () => {
         const userId = "staffId123";
-
-        // Execute the method
-        const result = getAssignedRequests.execute(userId);
-
-        // Verify the result is an empty array
-        expect(result).toEqual([]);
-    });
-
-    it("should return only requests assigned to the specified user", () => {
-        const userId = "staffId"; // User ID for which requests will be filtered
-
-        // Mock data with the new Request constructor structure
         const mockRequests: Request[] = [
-            new Request("1", "Request 1", userId, "eventName", 80, 10, new Date(), "details", Status.Created),
-            new Request("2", "Request 2", "otherStaffId", "eventName", 200, 5, new Date(), "details", Status.Created),
-            new Request("3", "Request 3", userId, "eventName", 100, 15, new Date(), "details", Status.Created),
+            new Request("1", "client1", userId, "Event 1", 1000, 5, new Date(), "details", Status.Created),
+            new Request("2", "client2", userId, "Event 2", 1500, 8, new Date(), "details", Status.InProgress),
         ];
 
-        // Add the mock requests to the repository
-        requestRepository.addRequest(mockRequests[0]);
-        requestRepository.addRequest(mockRequests[1]);
-        requestRepository.addRequest(mockRequests[2]);
+        // Mock the repository to return requests assigned to the user
+        requestRepositoryMock.getRequestByUserID.mockReturnValue(mockRequests);
 
         // Execute the method
         const result = getAssignedRequests.execute(userId);
 
-        // Verify the result includes only the requests assigned to the specified user
-        expect(result).toEqual([
-            mockRequests[0],
-            mockRequests[2]
-        ]);
+        // Verify that getRequestByUserID was called with the correct userId
+        expect(requestRepositoryMock.getRequestByUserID).toHaveBeenCalledWith(userId);
+
+        // Check that the result matches the mock requests
+        expect(result).toEqual(mockRequests);
+    });
+
+    it("should return an empty array if no requests are assigned to the given user ID", () => {
+        const userId = "staffId123";
+
+        // Mock getRequestByUserID to return an empty array
+        requestRepositoryMock.getRequestByUserID.mockReturnValue([]);
+
+        // Execute the method
+        const result = getAssignedRequests.execute(userId);
+
+        // Verify that getRequestByUserID was called with the correct userId
+        expect(requestRepositoryMock.getRequestByUserID).toHaveBeenCalledWith(userId);
+
+        // Check that the result is an empty array
+        expect(result).toEqual([]);
     });
 });

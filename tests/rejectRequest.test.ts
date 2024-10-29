@@ -10,6 +10,7 @@ describe("RejectRequest", () => {
     beforeEach(() => {
         // Mock the RequestRepository
         requestRepositoryMock = {
+            test: true,
             addRequest: jest.fn(),
             getAllRequests: jest.fn(),
             removeRequest: jest.fn(),

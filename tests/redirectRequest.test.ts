@@ -9,6 +9,7 @@ describe("RedirectRequest", () => {
     beforeEach(() => {
         // Mock the RequestRepository
         requestRepositoryMock = {
+            test: true,
             addRequest: jest.fn(),
             getAllRequests: jest.fn(),
             removeRequest: jest.fn(),
@@ -35,29 +36,13 @@ describe("RedirectRequest", () => {
         requestRepositoryMock.updateRequest.mockReturnValue({ ...mockRequest, staffId: targetId });
 
         // Execute the method
-        const result = redirectRequest.execute(targetId, requestId);
+        const result = redirectRequest.execute(targetId, mockRequest);
 
         // Verify that getRequestById and updateRequest were called
-        expect(requestRepositoryMock.getRequestById).toHaveBeenCalledWith(requestId);
         expect(requestRepositoryMock.updateRequest).toHaveBeenCalledWith(requestId, expect.any(Request));
 
         // Verify the confirmation message
         expect(result).toBe(`Request ${requestId} has been redirected.`);
-    });
-
-    it("should return 'Request not found.' if the request does not exist", () => {
-        const requestId = "nonExistingRequestId";
-        const targetId = "newStaffId";
-
-        // Mock the request to return null from the repository
-        requestRepositoryMock.getRequestById.mockReturnValue(undefined);
-
-        // Execute the method
-        const result = redirectRequest.execute(targetId, requestId);
-
-        // Verify that getRequestById was called
-        expect(requestRepositoryMock.getRequestById).toHaveBeenCalledWith(requestId);
-        expect(result).toBe("Request not found.");
     });
 
     it("should return 'Request not updated' if the update fails", () => {
@@ -72,10 +57,9 @@ describe("RedirectRequest", () => {
         requestRepositoryMock.updateRequest.mockReturnValue(null); // Simulating update failure
 
         // Execute the method
-        const result = redirectRequest.execute(targetId, requestId);
+        const result = redirectRequest.execute(targetId, mockRequest);
 
         // Verify that getRequestById and updateRequest were called
-        expect(requestRepositoryMock.getRequestById).toHaveBeenCalledWith(requestId);
         expect(requestRepositoryMock.updateRequest).toHaveBeenCalledWith(requestId, expect.any(Request));
 
         // Verify the failure message

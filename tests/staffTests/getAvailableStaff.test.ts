@@ -10,6 +10,7 @@ describe("GetAvailableStaff", () => {
     beforeEach(() => {
         // Mock the StaffRepository
         staffRepositoryMock = {
+            test: true,
             addStaff: jest.fn(),
             removeStaff: jest.fn(),
             updateStaff: jest.fn(),

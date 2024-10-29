@@ -1,13 +1,12 @@
-import { Status } from "../domain/request";
+import { Request, Status } from "../domain/request";
 import { Role } from "../domain/types";
 import { RequestRepository } from "../infrastructure/repositories/requestRepository";
-import { Request } from "../domain/request";
 
 export class ArchiveRequest {
 
     constructor(private readonly requestRepository: RequestRepository) {}
 
-    execute(requestId: string, updatedData: Partial<Request>, role: Role): string {
+    execute(requestId: string, updatedData: Request, role: Role): string {
         switch (role) {
 
             case Role.SeniorCustomerService: 

@@ -6,13 +6,15 @@ export class RequestRepository {
     private readonly filePath: string = path.join(__dirname, "../persistance/requests.json");
     private requests: Request[] = [];
 
-    constructor() {
-        this.loadRequests();
+    public test: boolean = false;
+    constructor(test: boolean) {
+        this.test = test;
+        if(!test) this.loadRequests();
     }
 
     removeAllRequests(): void {
         this.requests = [];
-        this.saveRequests(); // Save the empty array to the file
+        if(!test) this.saveRequests(); // Save the empty array to the file
     }
 
     private loadRequests(): void {
@@ -35,14 +37,14 @@ export class RequestRepository {
 
     addRequest(request: Request): void {
         this.requests.push(request);
-        this.saveRequests();
+        if(!test) this.saveRequests();
     }
 
     removeRequest(requestId: string): boolean {
         const index = this.requests.findIndex(request => request.requestId === requestId);
         if (index !== -1) {
             this.requests.splice(index, 1);
-            this.saveRequests();
+            if(!test) this.saveRequests();
             return true; 
         }
         return false; 
@@ -59,7 +61,7 @@ export class RequestRepository {
             this.requests.push(updatedRequest);
     
             console.log("Requests after pushing: ", this.requests);
-            this.saveRequests(); 
+            if(!test) this.saveRequests(); 
             return updatedRequest; 
         }
         

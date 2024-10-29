@@ -12,9 +12,11 @@ export class UserRepository {
         this.saveUsers();
     }
 
-    constructor() {
-        this.loadUsers();
+    private test: boolean = false;
+    constructor(test: boolean) {
+        if(!test) this.loadUsers();
     }
+
 
     // Load users from the JSON file
     private loadUsers(): void {
@@ -53,7 +55,7 @@ export class UserRepository {
     // Add a new user to the repository and save to file
     addUser(user: User): void {
         this.users.push(user);
-        this.saveUsers();
+        if(!test) this.saveUsers();
     }
 
     // Remove a user by their ID and save to file
@@ -61,7 +63,7 @@ export class UserRepository {
         const index = this.users.findIndex(user => user.userName === userId);
         if (index !== -1) {
             this.users.splice(index, 1);
-            this.saveUsers();
+            if(!test) this.saveUsers();
             return true;
         }
         return false;
@@ -72,7 +74,7 @@ export class UserRepository {
         const user = this.users.find(user => user.userName === userId);
         if (user) {
             Object.assign(user, updatedData);
-            this.saveUsers();
+            if(!test) this.saveUsers();
             return user;
         }
         return null;
