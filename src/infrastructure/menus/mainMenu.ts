@@ -35,6 +35,7 @@ export class MainMenu {
         rl.question("Select an option: ", (selection) => {
             switch (selection.trim()) {
                 case "1":
+                    rl.close();
                     this.startLogin();
                     break;
                 case "2":
@@ -46,7 +47,6 @@ export class MainMenu {
                     this.displayMenu();
                     break;
             }
-            rl.close();
         });
     }
 

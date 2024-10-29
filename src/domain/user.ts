@@ -1,10 +1,7 @@
 import { permissions } from "./permissions";
-import { Request } from "./request";
 import { Role } from "./types";
 
 export class User {
-    private requests: Request[] = [];
-    private archived: Request[] = [];
 
     public userId: string;
     public userName: string;

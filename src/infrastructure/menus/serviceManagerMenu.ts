@@ -1,7 +1,8 @@
 import * as readline from "readline";
+import { CreateStaffRequest } from "../../application/createStaffRequest";
 import { GetAssignedRequests } from "../../application/getAssignedRequests";
 import { RedirectRequest } from "../../application/redirectRequest";
-import { GetAvailableStaff } from "../../application/staff/getAvailabelStaff";
+import { GetAvailableStaff } from "../../application/staff/getAvailableStaff";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { Request, Status } from "../../domain/request";
 import { Staff } from "../../domain/staff";
@@ -16,7 +17,8 @@ export class ServiceManagerMenu {
         private readonly getAssignedRequests: GetAssignedRequests,
         private readonly redirectRequest: RedirectRequest,
         private readonly userRepositoy: UserRepository,
-        private readonly updateRequestByStatus: UpdateRequestByStatus
+        private readonly updateRequestByStatus: UpdateRequestByStatus,
+        private readonly createStaffRequest: CreateStaffRequest
     ) {}
 
     private curr_user: any;
@@ -27,7 +29,8 @@ export class ServiceManagerMenu {
         console.log("2. Check sub-team comments");
         console.log("3. Request Budget check from Financial Manager");
         console.log("4. Update application status to in-progress");
-        console.log("5. Exit");
+        console.log("5. Request additional staff");
+        console.log("6. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
     }
@@ -53,6 +56,9 @@ export class ServiceManagerMenu {
                     this.updateApplicationStatus();
                     break;
                 case "5":
+                    this.requestAdditionalStaff();
+                    break;
+                case "6":
                     console.log("Exiting the Production Manager Menu.");
                     rl.close();
                     return;
@@ -126,5 +132,28 @@ export class ServiceManagerMenu {
             rl.close();
             this.displayMenu(this.curr_user);
         });
+    }
+
+    private requestAdditionalStaff(): void {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+
+            rl.question("Enter staff ID: ", (staffId) => {
+                rl.question("Enter requesting department: ", (requestingDepartment) => {
+                    rl.question("Enter years of experience needed: ", (yearsOfExperience) => {
+                        rl.question("Enter job title: ", (jobTittle) => {
+                            rl.question("Enter job description: ", (jobDescription) => {
+                                rl.question("Enter contract type: ", (contractType) => {
+                                    const response = this.createStaffRequest.execute(staffId, requestingDepartment, Number(yearsOfExperience), jobTittle, jobDescription, contractType); 
+                                    rl.close();
+                                    this.displayMenu(this.curr_user);
+                                });
+                            });
+                        });
+                    });
+                });
+            });
     }
 }
