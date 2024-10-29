@@ -2,6 +2,7 @@ import * as readline from "readline";
 import { GetAssignedRequests } from "../../application/getAssignedRequests";
 import { RedirectRequest } from "../../application/redirectRequest";
 import { CreateStaffRequest } from "../../application/staff/createStaffRequest";
+import { GetAllStaff } from "../../application/staff/getAllStaff";
 import { GetAvailableStaff } from "../../application/staff/getAvailableStaff";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { Request, Status } from "../../domain/request";
@@ -14,6 +15,7 @@ export class ServiceManagerMenu {
     getAllRequests: any;
     constructor(
         private readonly getAvailableStaff: GetAvailableStaff,
+        private readonly getAllStaff: GetAllStaff,
         private readonly getAssignedRequests: GetAssignedRequests,
         private readonly redirectRequest: RedirectRequest,
         private readonly userRepositoy: UserRepository,
@@ -25,12 +27,13 @@ export class ServiceManagerMenu {
 
     displayMenu(curr_user: User): void {
         console.log("\n--- Service Manager Menu ---");
-        console.log("1. Show available staff");
-        console.log("2. Check sub-team comments");
-        console.log("3. Request Budget check from Financial Manager");
-        console.log("4. Update application status to in-progress");
-        console.log("5. Request additional staff");
-        console.log("6. Exit");
+        console.log("1. Show All Staff");
+        console.log("2. Show available staff");
+        console.log("3. Check sub-team comments (displalys assigned requests)");
+        console.log("4. Request Budget check from Financial Manager");
+        console.log("5. Update application status to in-progress");
+        console.log("6. Request additional staff");
+        console.log("7. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
     }
@@ -44,21 +47,30 @@ export class ServiceManagerMenu {
         rl.question("Select an option: ", (selection) => {
             switch (selection.trim()) {
                 case "1":
-                    this.showAvailableStaff();
+                    rl.close();
+                    this.showAllStaff();
                     break;
                 case "2":
-                    this.reviewSubTeamComments();
+                    rl.close();
+                    this.showAvailableStaff();
                     break;
                 case "3":
-                    this.requestBudgetCheck();
+                    rl.close();
+                    this.reviewSubTeamComments();
                     break;
                 case "4":
-                    this.updateApplicationStatus();
+                    rl.close();
+                    this.requestBudgetCheck();
                     break;
                 case "5":
-                    this.requestAdditionalStaff();
+                    rl.close();
+                    this.updateApplicationStatus();
                     break;
                 case "6":
+                    rl.close();
+                    this.requestAdditionalStaff();
+                    break;
+                case "7":
                     console.log("Exiting the Production Manager Menu.");
                     rl.close();
                     return;
@@ -67,8 +79,20 @@ export class ServiceManagerMenu {
                     this.displayMenu(this.curr_user);
                     break;
             }
-            rl.close();
         });
+    }
+
+    private showAllStaff(): void {
+        const availableStaff = this.getAllStaff.execute();
+        if(availableStaff.length === 0) {
+            console.log("No available staff.");
+        } else {
+            console.log("All Staff:");
+            availableStaff.forEach((staff: Staff) => {
+                console.log(`Id: ${staff.staffId}, Available: ${staff.available}, Role: ${staff.staffRole}`);
+            });
+        }
+        this.displayMenu(this.curr_user);
     }
 
     private showAvailableStaff(): void {
@@ -104,7 +128,7 @@ export class ServiceManagerMenu {
             output: process.stdout,
         });
 
-        rl.question("Enter request Id to send to financial manager", (requestId) => {
+        rl.question("Enter request Id to send to financial manager: ", (requestId) => {
             const message = this.redirectRequest.execute(
                 this.userRepositoy.getUsersByRole(Role.FinancialManager)[0].userId, requestId);
                 
@@ -120,7 +144,7 @@ export class ServiceManagerMenu {
             output: process.stdout,
         });
 
-        rl.question("Enter request Id to update status to in-progress", (requestId) => {
+        rl.question("Enter request Id to update status to in-progress: ", (requestId) => {
             const curr_request: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
             if(curr_request.budgetApproved){
                 const message = this.updateRequestByStatus.execute(requestId, Status.InProgress);

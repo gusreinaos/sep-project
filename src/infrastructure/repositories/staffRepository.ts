@@ -1,8 +1,39 @@
+import * as fs from 'fs';
+import * as path from 'path';
 import { Staff } from "../../domain/staff";
 import { StaffRole } from "../../domain/types";
 
 export class StaffRepository {
     private staff: Staff[] = [];
+
+    private readonly filePath: string = path.join(__dirname, "../persistance/staff.json");
+
+    constructor() {
+        this.loadStaff();
+    }
+
+    removeAllRequests(): void {
+        this.staff = [];
+        this.saveStaff();
+    }
+
+    private loadStaff(): void {
+        try {
+            const data = fs.readFileSync(this.filePath, "utf8");
+            this.staff = JSON.parse(data);
+        } catch (error) {
+            console.error("Could not load requests:", error);
+            this.staff = [];
+        }
+    }
+
+    private saveStaff(): void {
+        try {
+            fs.writeFileSync(this.filePath, JSON.stringify(this.staff, null, 2));
+        } catch (error) {
+            console.error("Could not save requests:", error);
+        }
+    }
 
     // Add a new staff to the repository
     addStaff(staff: Staff): void {

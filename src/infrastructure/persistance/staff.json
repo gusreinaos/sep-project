@@ -1,1 +1,27 @@
-[]
+[
+    {
+        "staffId": "1",
+        "available": true,
+        "staffRole": "Waiter"
+    },
+    {
+        "staffId": "2",
+        "available": true,
+        "staffRole": "Waiter"
+    },
+    {
+        "staffId": "3",
+        "available": false,
+        "staffRole": "Waiter"
+    },
+    {
+        "staffId": "4",
+        "available": true,
+        "staffRole": "Waiter"
+    },
+    {
+        "staffId": "5",
+        "available": false,
+        "staffRole": "Waiter"
+    }
+]

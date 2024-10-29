@@ -3,6 +3,7 @@ import { GetAllRequests } from "./src/application/getAllRequests";
 import { GetAssignedRequests } from "./src/application/getAssignedRequests";
 import { RedirectRequest } from "./src/application/redirectRequest";
 import { CreateStaffRequest } from "./src/application/staff/createStaffRequest";
+import { GetAllStaff } from "./src/application/staff/getAllStaff";
 import { GetAvailableStaff } from "./src/application/staff/getAvailableStaff";
 import { UpdateRequest } from "./src/application/updateRequest";
 import { UpdateRequestByStatus } from "./src/application/updateRequestByStatus";
@@ -31,6 +32,7 @@ const getAssignedRequests = new GetAssignedRequests(requestRepository)
 const redirectRequest = new RedirectRequest(requestRepository)
 const updateRequest = new UpdateRequest(requestRepository)
 const getAvailableStaff = new GetAvailableStaff(staffRepository)
+const getAllStaff = new GetAllStaff(staffRepository)
 const createStaffRequest = new CreateStaffRequest(staffRequestRepository)
 
 // Create instances of each menu
@@ -39,8 +41,8 @@ const customerServiceMenu = new CustomerServiceMenu(createEventRequest);
 const seniorCustomerServiceMenu = new SeniorCustomerServiceMenu(getAllRequests, updateRequestByStatus);
 const financialManagerMenu = new FinancialManagerMenu(getAssignedRequests, redirectRequest, userRepository, updateRequest);
 const administrationManagerMenu = new AdministrationManagerMenu(getAssignedRequests, updateRequestByStatus);
-const productionManagerMenu = new ProductionManagerMenu(getAvailableStaff, getAssignedRequests, redirectRequest, userRepository, updateRequestByStatus);
-const serviceManagerMenu = new ServiceManagerMenu(getAvailableStaff, getAssignedRequests, redirectRequest, userRepository,  updateRequestByStatus, createStaffRequest);
+const productionManagerMenu = new ProductionManagerMenu(getAvailableStaff, getAllStaff, getAssignedRequests, redirectRequest, userRepository, updateRequestByStatus, createStaffRequest);
+const serviceManagerMenu = new ServiceManagerMenu(getAvailableStaff, getAllStaff, getAssignedRequests, redirectRequest, userRepository,  updateRequestByStatus, createStaffRequest);
 
 // Instantiate the main menu
 const mainMenu = new MainMenu(
