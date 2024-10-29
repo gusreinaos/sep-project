@@ -1,0 +1,21 @@
+[
+  {
+    "requestId": "q5czafaso",
+    "clientId": "1",
+    "staffId": "4",
+    "eventName": "Wedding",
+    "proposedBudget": 2000,
+    "staffRequirement": 5,
+    "date": "2024-10-30T00:00:00.000Z",
+    "details": "Wedding ",
+    "status": "Created",
+    "financialFeedback": "",
+    "eventDetails": {
+      "id": "q5czafaso",
+      "details": "",
+      "status": "Created",
+      "budget": 0
+    },
+    "budgetApproved": false
+  }
+]

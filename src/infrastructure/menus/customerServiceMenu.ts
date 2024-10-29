@@ -31,7 +31,7 @@ export class CustomerServiceMenu {
                     rl.close();
                     this.createEventRequestInput();
                     break;
-                case "3":
+                case "4":
                     console.log("Exiting the Customer Service Menu.");
                     rl.close();
                     return;
@@ -51,7 +51,7 @@ export class CustomerServiceMenu {
         });
 
         rl.question("Enter client ID: ", (clientId) => {
-            rl.question("Enter staff ID: ", (staffId) => {
+            rl.question("Enter staff to redirect the request to: ", (staffId) => {
                 rl.question("Enter event name: ", (eventName) => {
                     rl.question("Enter proposed budget: ", (proposedBudget) => {
                         rl.question("Enter staff requirement: ", (staffRequirement) => {

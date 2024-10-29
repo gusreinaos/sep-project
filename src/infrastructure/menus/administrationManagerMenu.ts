@@ -30,9 +30,11 @@ export class AdministrationManagerMenu {
         rl.question("Select an option: ", (selection) => {
             switch (selection.trim()) {
                 case "1":
+                    rl.close();
                     this.showAssignedRequests(this.curr_user);
                     break;
                 case "2":
+                    rl.close();
                     this.approveOrRejectRequest();
                     break;
                 case "3":
@@ -44,7 +46,6 @@ export class AdministrationManagerMenu {
                     this.displayMenu(this.curr_user);
                     break;
             }
-            rl.close();
         });
     }
 
@@ -56,7 +57,7 @@ export class AdministrationManagerMenu {
             console.log("Assigned Requests:");
             requests.forEach((request: Request) => {
                 const print = JSON.stringify(request, null, 2); //pretty print
-                console.log(`Request: ${print}`);
+                console.log(`Request: ${print} \n`);
             });
         }
         this.displayMenu(curr_user);
@@ -78,9 +79,9 @@ export class AdministrationManagerMenu {
         }
 
         requests.forEach((request: Request) => {
-            console.log(`ID: ${request.requestId}, Event Name: ${request.eventName}, Status: ${request.status}`);
+            console.log(`ID: ${request.requestId}, Event Name: ${request.eventName}, Status: ${request.status}, Financial feedback: ${request.financialFeedback}`);
         });
-
+        console.log("")
         this.getRequestAction();
     
     }

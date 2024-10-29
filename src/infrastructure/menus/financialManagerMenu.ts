@@ -36,12 +36,15 @@ export class FinancialManagerMenu {
         rl.question("Select an option: ", (selection) => {
             switch (selection.trim()) {
                 case "1":
+                    rl.close();
                     this.showAssignedRequests();
                     break;
                 case "2":
+                    rl.close();
                     this.addCommentsToRequest();
                     break;
                 case "3":
+                    rl.close();
                     this.delegateSubTeamBudget();
                     break;
                 case "4":
@@ -53,7 +56,6 @@ export class FinancialManagerMenu {
                     this.displayMenu(this.curr_user);
                     break;
             }
-            rl.close();
         });
     }
 
@@ -79,20 +81,21 @@ export class FinancialManagerMenu {
         rl.question("Enter your request id: ", (requestId) => {
             rl.question("Enter feedback on financial status: ", (financialFeedback) => {
             
-                // Setting role and status internally
                 const status = Status.Created;
                 const role = Role.CustomerService;
                 
                 const requests = this.getAssignedRequests.execute(this.curr_user.userId)
-                if(requests.length === 0) {    
-
+                if(requests.length > 0) {    
+                    const newRequest = requests.filter(request => request.requestId === requestId)[0]
+                    newRequest.financialFeedback = financialFeedback;
+                    this.updateRequest.execute(requestId, newRequest, this.curr_user.role)
                     const message = this.redirectRequest.execute(
-                        this.userRepositoy.getUsersByRole(Role.FinancialManager)[0].userId,
+                        this.userRepositoy.getUsersByRole(Role.AdminManager)[0].userId,
                         requestId);
 
                     console.log(message);
 
-                } else console.log("Request not found.")
+                } else console.log("No requests assigned to this user id.")
                 rl.close();
                 this.displayMenu(this.curr_user);
             });                     

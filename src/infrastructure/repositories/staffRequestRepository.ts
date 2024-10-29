@@ -1,6 +1,6 @@
 import { StaffRequest } from "../../domain/staffRequest";
 
-export class StaffStaffRequestRepository {
+export class StaffRequestRepository {
     private staffRequests: StaffRequest[] = [];
 
     addStaffRequest(StaffRequest: StaffRequest): void {

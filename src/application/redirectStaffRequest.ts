@@ -1,9 +1,9 @@
 import { StaffRequest } from "../domain/staffRequest";
-import { StaffStaffRequestRepository } from "../infrastructure/repositories/staffRequestRepository";
+import { StaffRequestRepository } from "../infrastructure/repositories/staffRequestRepository";
 
 export class RedirectStaffRequest {
 
-    constructor(private readonly staffRequestRepository: StaffStaffRequestRepository) {}
+    constructor(private readonly staffRequestRepository: StaffRequestRepository) {}
 
     execute(targetId: string, staffRequestId: string): string{
        
