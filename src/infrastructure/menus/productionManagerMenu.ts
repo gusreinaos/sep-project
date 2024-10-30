@@ -3,10 +3,12 @@ import { GetAssignedRequests } from "../../application/getAssignedRequests";
 import { RedirectRequest } from "../../application/redirectRequest";
 import { CreateStaffRequest } from "../../application/staff/createStaffRequest";
 import { GetAllStaff } from "../../application/staff/getAllStaff";
+import { GetAssignedStaffRequests } from "../../application/staff/getAssignedStaffRequests";
 import { GetAvailableStaff } from "../../application/staff/getAvailableStaff";
 import { UpdateRequestByStatus } from "../../application/updateRequestByStatus";
 import { Request, Status } from "../../domain/request";
 import { Staff } from "../../domain/staff";
+import { StaffRequest } from "../../domain/staffRequest";
 import { Role } from "../../domain/types";
 import { User } from "../../domain/user";
 import { RequestRepository } from "../repositories/requestRepository";
@@ -22,6 +24,7 @@ export class ProductionManagerMenu {
         private readonly updateRequestByStatus: UpdateRequestByStatus,
         private readonly createStaffRequest: CreateStaffRequest,
         private readonly requestRepository: RequestRepository,
+        private readonly getAssignedStaffRequests: GetAssignedStaffRequests
     ) {}
 
     private curr_user: any;
@@ -30,11 +33,13 @@ export class ProductionManagerMenu {
         console.log("\n--- Production Manager Menu ---");
         console.log("1. Show All Staff");
         console.log("2. Show Available Staff");
-        console.log("3. Check sub-team comments (displalys assigned requests)");
-        console.log("4. Request Budget check from Financial Manager");
-        console.log("5. Update application status to in-progress");
-        console.log("6. Request additional staff");
-        console.log("7. Exit");
+        console.log("3. Distribute request to sub-team")
+        console.log("4. Check sub-team comments (displalys assigned requests)");
+        console.log("5. Request Budget check from Financial Manager");
+        console.log("6. Update application status to in-progress");
+        console.log("7. Request additional staff");
+        console.log("8. List additional staff requests");
+        console.log("9. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
     }
@@ -57,21 +62,28 @@ export class ProductionManagerMenu {
                     break;
                 case "3":
                     rl.close();
-                    this.reviewSubTeamComments();
+                    this.distributeTask();
                     break;
                 case "4":
                     rl.close();
-                    this.requestBudgetCheck();
+                    this.reviewSubTeamComments();
                     break;
                 case "5":
                     rl.close();
-                    this.updateApplicationStatus();
+                    this.requestBudgetCheck();
                     break;
                 case "6":
                     rl.close();
-                    this.requestAdditionalStaff();
+                    this.updateApplicationStatus();
                     break;
                 case "7":
+                    rl.close();
+                    this.requestAdditionalStaff();
+                    break;
+                case "8":
+                    rl.close();
+                    this.getAdditionalStaffRequests();
+                case "9":
                     console.log("Exiting the Production Manager Menu.");
                     rl.close();
                     return;
@@ -108,6 +120,20 @@ export class ProductionManagerMenu {
             });
         }
         this.displayMenu(this.curr_user);
+    }
+
+    private distributeTask(): void {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+
+        rl.question("Enter request ID to redirect to subteam: ", (requestId) => {
+            const message = this.redirectRequest.execute(this.userRepositoy.getUsersByRole(Role.SubTeamUser)[0].userId, this.requestRepository.getRequestById(requestId)!);
+            console.log(message);
+            rl.close();
+            this.displayMenu(this.curr_user);
+        });
     }
 
     private reviewSubTeamComments(): void {
@@ -182,5 +208,19 @@ export class ProductionManagerMenu {
                     });
                 });
             });
+    }
+    
+    private getAdditionalStaffRequests(): void {
+        const staffRequests = this.getAssignedStaffRequests.execute(this.curr_user.userId)
+        if(staffRequests.length === 0) {
+            console.log("No available requests")
+        }
+        else {
+            staffRequests.forEach((staffRequest: StaffRequest) => {
+                console.log(`ID: ${staffRequest.requestId}, Department: ${staffRequest.requestingDepartment}, Job title: ${staffRequest.jobTitle}, Years of experience: ${staffRequest.yearsOfExperience}, Status ${staffRequest.staffStatus}`);
+            });
+            console.log("")
+        }
+        this.displayMenu(this.curr_user)
     }
 }

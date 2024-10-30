@@ -24,7 +24,14 @@ export class Request {
         date: Date,
         details: string,
         status: Status,
-        financialFeedback: string = ""
+        financialFeedback: string = "",
+        eventDetails: Event = {
+            id: requestId,
+            details: "",
+            status: status, // "open", "in_progress", "closed"
+            budget: 0,
+        },
+        budgetApproved = false
 
     ) {
         this.requestId = requestId;
@@ -37,13 +44,8 @@ export class Request {
         this.details = details;
         this.status = status;
         this.financialFeedback = financialFeedback;
-        this.eventDetails = {
-            id: requestId,
-            details: "",
-            status: status, // "open", "in_progress", "closed"
-            budget: 0,
-        }
-        this.budgetApproved = false;
+        this.eventDetails = eventDetails
+        this.budgetApproved = budgetApproved;
     }
 }
 

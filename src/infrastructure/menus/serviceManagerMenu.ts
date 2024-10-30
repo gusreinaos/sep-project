@@ -34,12 +34,13 @@ export class ServiceManagerMenu {
         console.log("\n--- Service Manager Menu ---");
         console.log("1. Show All Staff");
         console.log("2. Show available staff");
-        console.log("3. Check sub-team comments (displalys assigned requests)");
-        console.log("4. Request Budget check from Financial Manager");
-        console.log("5. Update application status to in-progress");
-        console.log("6. Request additional staff");
-        console.log("7. List additional staff requests");
-        console.log("8. Exit");
+        console.log("3. Distribute request to sub-team")
+        console.log("4. Check sub-team comments (displalys assigned requests)");
+        console.log("5. Request Budget check from Financial Manager");
+        console.log("6. Update application status to in-progress");
+        console.log("7. Request additional staff");
+        console.log("8. List additional staff requests");
+        console.log("9. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
     }
@@ -62,24 +63,28 @@ export class ServiceManagerMenu {
                     break;
                 case "3":
                     rl.close();
-                    this.reviewSubTeamComments();
+                    this.distributeTask();
                     break;
                 case "4":
                     rl.close();
-                    this.requestBudgetCheck();
+                    this.reviewSubTeamComments();
                     break;
                 case "5":
                     rl.close();
-                    this.updateApplicationStatus();
+                    this.requestBudgetCheck();
                     break;
                 case "6":
                     rl.close();
-                    this.requestAdditionalStaff();
+                    this.updateApplicationStatus();
                     break;
                 case "7":
                     rl.close();
-                    this.getAdditionalStaffRequests();
+                    this.requestAdditionalStaff();
+                    break;
                 case "8":
+                    rl.close();
+                    this.getAdditionalStaffRequests();
+                case "9":
                     console.log("Exiting the Production Manager Menu.");
                     rl.close();
                     return;
@@ -115,6 +120,20 @@ export class ServiceManagerMenu {
             });
         }
         this.displayMenu(this.curr_user);
+    }
+
+    private distributeTask(): void {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+
+        rl.question("Enter request ID to redirect to subteam: ", (requestId) => {
+            const message = this.redirectRequest.execute(this.userRepositoy.getUsersByRole(Role.SubTeamUser)[0].userId, this.requestRepository.getRequestById(requestId)!);
+            console.log(message);
+            rl.close();
+            this.displayMenu(this.curr_user);
+        });
     }
 
     private reviewSubTeamComments(): void {

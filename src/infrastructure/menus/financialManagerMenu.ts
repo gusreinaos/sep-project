@@ -93,7 +93,6 @@ export class FinancialManagerMenu {
                     const message = this.redirectRequest.execute(this.userRepositoy.getUsersByRole(Role.AdminManager)[0].userId, updatedRequest!);
 
                     console.log(message);
-
                 } else console.log("No requests assigned to this user id.")
                 rl.close();
                 this.displayMenu(this.curr_user);
@@ -117,7 +116,7 @@ export class FinancialManagerMenu {
 
                     this.redirectRequest.execute(
                         this.userRepositoy.getUsersByRole(Role.ProductionManager)[0].userId,
-                        updatedRequest!);
+                        updatedRequest!, true);
     
                     console.log(`Request with ID ${requestId} has been approved.`);
                 } else if (verdict.trim().toLowerCase() === "reject") {

@@ -21,7 +21,7 @@ export class SubTeamMenu {
         console.log("\n--- SubTeam Menu ---");
         console.log("1. Show the team's assigned requests");
         console.log("2. Submit Plans");
-        console.log("3. Submit a Budget Request");
+        console.log("3. Submit a Budget Request and submit");
         console.log("3. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
@@ -36,12 +36,15 @@ export class SubTeamMenu {
         rl.question("Select an option: ", (selection) => {
             switch (selection.trim()) {
                 case "1":
+                    rl.close();
                     this.showAssignedRequests();
                     break;
                 case "2":
+                    rl.close();
                     this.executeSubmitPlans();
                     break;
                 case "3":
+                    rl.close();
                     this.executeSubmitBudgetRequest();
                     break;
                 case "4":
@@ -53,7 +56,6 @@ export class SubTeamMenu {
                     this.displayMenu(this.curr_user);
                     break;
             }
-            rl.close();
         });
     }
 
@@ -65,7 +67,7 @@ export class SubTeamMenu {
         } else {
             console.log("Assigned Requests:");
             requests.forEach((request: Request) => {
-                console.log(`Event Details: ${request.eventDetails.details}, Budget: ${request.eventDetails.budget}`);
+                console.log(`RequestID: ${request.requestId}, Event Details: ${request.eventDetails.details}, Budget: ${request.eventDetails.budget}`);
             });
         }
         this.displayMenu(this.curr_user);
@@ -81,10 +83,11 @@ export class SubTeamMenu {
             rl.question("Enter plans for the event: ", (plans) => {
                 const updatedRequest: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
                 updatedRequest.eventDetails.details = plans;
-
+                console.log(updatedRequest)
                 const message = this.updateRequest.execute(requestId, updatedRequest);
                 
                 console.log(message);
+                console.log("Plans submitted successfully, please add budget.");
                 rl.close();
                 this.displayMenu(this.curr_user);
             });
@@ -99,16 +102,18 @@ export class SubTeamMenu {
         });
 
         rl.question("Enter chosen request id: ", (requestId) => {
-            rl.question("Enter propsed budget for the event (submits to manager): ", (budget) => {
+            rl.question("Enter propsed budget for the event (WARNING completion submits request to manager): ", (budget) => {
                 const updatedRequest: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
                 updatedRequest.eventDetails.budget = parseInt(budget);
-
-                this.updateRequest.execute(requestId, updatedRequest);
-
+                
+                const newRequest = this.updateRequest.execute(requestId, updatedRequest);
+                
+                console.log("new Request", newRequest)
+            
                 //send to production manager
                 const message = this.redirectRequest.execute(
                     this.userRepositoy.getUsersByRole(Role.ProductionManager)[0].userId,
-                    updatedRequest);
+                    newRequest!);
 
                 console.log(message);
 

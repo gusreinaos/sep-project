@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Request } from "../../domain/request";
+import { Event } from "../../domain/types";
 
 export class RequestRepository {
     private readonly filePath: string = path.join(__dirname, "../persistance/requests.json");
@@ -55,12 +56,26 @@ export class RequestRepository {
     
         if (requestIndex !== -1) {
             this.requests.splice(requestIndex, 1)[0];
-            console.log("From repository: ", updatedData.financialFeedback)
-            const updatedRequest = new Request(updatedData.requestId, updatedData.clientId, updatedData.staffId, updatedData.eventName, updatedData.proposedBudget, updatedData.staffRequirement, updatedData.date, updatedData.details, updatedData.status, updatedData.financialFeedback)
-            console.log("Updated request: ", updatedRequest)
+            const eventDetailsFull: Event = {
+                id: updatedData.eventDetails.id, 
+                details: updatedData.eventDetails.details, 
+                status: updatedData.eventDetails.status, 
+                budget: updatedData.eventDetails.budget
+            };
+            const updatedRequest = new Request(
+                updatedData.requestId, 
+                updatedData.clientId, 
+                updatedData.staffId, 
+                updatedData.eventName, 
+                updatedData.proposedBudget, 
+                updatedData.staffRequirement, 
+                updatedData.date, updatedData.details, 
+                updatedData.status, 
+                updatedData.financialFeedback, 
+                eventDetailsFull,
+                updatedData.budgetApproved);
             this.requests.push(updatedRequest);
     
-            console.log("Requests after pushing: ", this.requests);
             if(!this.test) this.saveRequests(); 
             return updatedRequest; 
         }

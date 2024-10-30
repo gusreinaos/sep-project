@@ -30,7 +30,6 @@ export class UserRepository {
     
             // Try parsing JSON and catch syntax errors
             try {
-                //console.log(data)
                 const parsedData = JSON.parse(data);
                 this.users = parsedData.users || []; // Default to empty array if users key doesn't exist
             } catch (parseError) {

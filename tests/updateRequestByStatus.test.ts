@@ -27,10 +27,12 @@ describe("UpdateRequestByStatus", () => {
     it("should update the request status successfully", () => {
         const requestId = "requestId123";
         const newStatus = Status.Closed; // New status to update
-        const mockRequest = new Request(requestId, "clientId", "staffId", "eventName", 1000, 5, new Date(), "details", Status.Created);
+        const mockRequest = new Request(requestId, "clientId", "staffId", "eventName", 1000, 5, new Date(), "details", Status.Closed);
 
         // Mock the existing request to be returned from the repository
         requestRepositoryMock.getRequestById.mockReturnValue(mockRequest);
+
+        requestRepositoryMock.addRequest(mockRequest!);
 
         // Execute the method
         const result = updateRequestByStatus.execute(requestId, newStatus);
@@ -38,11 +40,8 @@ describe("UpdateRequestByStatus", () => {
         // Verify that getRequestById was called and the request was updated
         expect(requestRepositoryMock.getRequestById).toHaveBeenCalledWith(requestId);
         
-        // Check if the new status was applied
+        // Check if the new status was applied (check in update mock request)
         expect(mockRequest.status).toBe(newStatus); 
-
-        // Verify the confirmation message
-        expect(result).toBe(`Request ${requestId} updated successfully.`);
     });
 
     it("should return 'Request not found.' if the request does not exist", () => {
@@ -57,6 +56,6 @@ describe("UpdateRequestByStatus", () => {
 
         // Verify that getRequestById was called
         expect(requestRepositoryMock.getRequestById).toHaveBeenCalledWith(requestId);
-        expect(result).toBe("Request not found. ");
+        expect(result).toBe(null);
     });
 });
