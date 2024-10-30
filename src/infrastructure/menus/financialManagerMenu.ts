@@ -67,7 +67,9 @@ export class FinancialManagerMenu {
             console.log("Assigned Requests:");
             requests.forEach((request: Request) => {
                 console.log(`Request ID: ${request.requestId}, Status: ${request.status}, Budget: ${request.proposedBudget}`);
+                console.log(`Event Status: ${request.eventDetails.status}, Budget: ${request.eventDetails.budget}`);
             });
+            console.log("");
         }
         this.displayMenu(this.curr_user);
     }
@@ -107,6 +109,7 @@ export class FinancialManagerMenu {
         });
 
         rl.question("Enter request Id: ", (requestId) => {
+
             rl.question("Do you want to approve or reject? (ENTER: approve or reject): ", (verdict) => {
                 const curr_request: Request = this.getAssignedRequests.execute(this.curr_user.userId).filter((request: Request) => request.requestId === requestId)[0];
 

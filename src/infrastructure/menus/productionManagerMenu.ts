@@ -137,14 +137,14 @@ export class ProductionManagerMenu {
     }
 
     private reviewSubTeamComments(): void {
-        console.log("Reviewing sub-team comments.");
+        console.log("\n Event Details below (subteam comments).");
         const requests = this.getAssignedRequests.execute(this.curr_user.userId);
         if(requests.length === 0) {
             console.log("No assigned requests.");
         } else {
             console.log("SubTeam Comments:");
             requests.forEach(request => {
-                console.log(`RequestID: ${request.requestId}, Budget: ${request.eventDetails.budget}, Comments: ${request.eventDetails.details}, Bugdet Approved?: ${request.budgetApproved}`);
+                console.log(`RequestID: ${request.requestId}, Budget: ${request.eventDetails.budget}, Comments: ${request.eventDetails.details}, Bugdet Approved By Financial Manager: ${request.budgetApproved}`);
             });
         }
         this.displayMenu(this.curr_user);

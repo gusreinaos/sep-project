@@ -22,7 +22,7 @@ export class SubTeamMenu {
         console.log("1. Show the team's assigned requests");
         console.log("2. Submit Plans");
         console.log("3. Submit a Budget Request and submit");
-        console.log("3. Exit");
+        console.log("4. Exit");
         this.curr_user = curr_user;
         this.getUserSelection();
     }
